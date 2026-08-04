@@ -1,0 +1,379 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import {
+  ArrowUpRight,
+  BookOpen,
+  BriefcaseBusiness,
+  CodeXml,
+  Download,
+  FileText,
+  GraduationCap,
+  Mail,
+  MapPin,
+  Phone,
+} from "@lucide/astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ProjectVisual from "../components/ProjectVisual.astro";
+import headshot from "../assets/headshot.png";
+import emadFramework from "../assets/research/emad-framework.png";
+import med3dFramework from "../assets/research/med3d-framework.png";
+import adReasoningFramework from "../assets/research/adreason-framework.png";
+
+type ResearchItem = {
+  title: string;
+  venue: string;
+  caption: string;
+  brief: string;
+  role: string;
+  details: string[];
+  tags: string[];
+  image?: ImageMetadata;
+  imageAlt?: string;
+  visual?: "tree";
+  links?: Array<{ label: string; href: string }>;
+};
+
+const research: ResearchItem[] = [
+  {
+    title: "QDT",
+    venue: "MICCAI 2026",
+    caption: "第一作者 · 已录用",
+    brief: "问题驱动的可解释决策树：把医学图像分类改写为逐步提问与决策过程，让预测结果保留清晰、可追溯的推理路径。",
+    role: "负责方法设计、实验验证与论文写作",
+    visual: "tree",
+    details: [
+      "构建 Question-Driven Decision Tree，以多步问题驱动医学图像分类。",
+      "通过知识蒸馏将结构化推理能力迁移到可部署模型中。",
+      "在皮肤病变分类场景中验证预测性能与决策可解释性。",
+    ],
+    tags: ["Decision Tree", "Distillation", "Medical AI"],
+  },
+  {
+    title: "EMAD",
+    venue: "CVPR 2026",
+    caption: "第二作者",
+    brief: "证据驱动的多模态诊断：让诊断结论显式连接临床证据与 3D 解剖区域，形成可追溯、可校验的医学推理链。",
+    role: "负责证据对齐、强化学习与实验验证",
+    image: emadFramework,
+    imageAlt: "EMAD 证据驱动多模态诊断框架图",
+    details: [
+      "参与 Sentence-Evidence-Anatomy 分层证据对齐与 GTX-Distill。",
+      "以可执行规则构造强化学习奖励，约束临床一致性与推理结论。",
+      "连接结构化报告、临床证据与 3D MRI 解剖定位。",
+    ],
+    tags: ["Grounding", "RLVR", "Multimodal", "3D MRI"],
+    links: [{ label: "论文", href: "https://arxiv.org/abs/2602.19178" }],
+  },
+  {
+    title: "Med3DInsight",
+    venue: "IEEE JBHI",
+    caption: "第二作者",
+    brief: "以 2D 多模态大模型生成的语义监督增强 3D 医学图像表征学习，探索跨维度知识迁移与稳健对齐。",
+    role: "负责模型实现与实验分析",
+    image: med3dFramework,
+    imageAlt: "Med3DInsight 三维医学图像预训练框架图",
+    details: [
+      "参与 Plane-Slice-Aware Transformer 的实现与跨维度表征实验。",
+      "通过 Partial Optimal Transport 缓解生成文本噪声带来的错配。",
+      "验证预训练表示在 3D 分割与分类任务中的迁移能力。",
+    ],
+    tags: ["3D Vision", "MLLM", "Optimal Transport", "Pretraining"],
+    links: [
+      { label: "论文", href: "https://arxiv.org/abs/2509.09064" },
+      { label: "代码", href: "https://github.com/Qybc/Med3DInsight" },
+    ],
+  },
+  {
+    title: "AD-Reasoning",
+    venue: "ICME 2026",
+    caption: "第三作者",
+    brief: "融合结构 MRI 与多类临床信息，用可验证奖励约束诊断理由、结论和医学指南的一致性。",
+    role: "负责数据构建、奖励设计与系统评测",
+    image: adReasoningFramework,
+    imageAlt: "AD-Reasoning 多模态指南推理框架图",
+    details: [
+      "参与多模态诊疗样本构建、指南一致性奖励设计和系统评测。",
+      "以规则验证器约束输出格式、证据覆盖与推理决策一致性。",
+      "探索从监督微调到可验证强化学习的可信医疗 AI 训练路径。",
+    ],
+    tags: ["GRPO", "Guideline Reasoning", "Multimodal", "Evaluation"],
+    links: [{ label: "论文", href: "https://arxiv.org/abs/2603.24059" }],
+  },
+];
+
+const publications = [
+  {
+    venue: "MICCAI 2026",
+    title: "QDT: Question-Driven Decision Tree for Interpretable Prediction",
+    role: "第一作者 · 已录用",
+  },
+  {
+    venue: "CVPR 2026",
+    title: "EMAD: Evidence-Centric Grounded Multimodal Diagnosis for Alzheimer's Disease",
+    role: "第二作者",
+    href: "https://arxiv.org/abs/2602.19178",
+  },
+  {
+    venue: "IEEE JBHI",
+    title: "Enhancing 3D Medical Image Understanding with Pretraining Aided by 2D Multimodal Large Language Models",
+    role: "第二作者",
+    href: "https://arxiv.org/abs/2509.09064",
+  },
+  {
+    venue: "ICME 2026",
+    title: "AD-Reasoning: Multimodal Guideline-Guided Reasoning for Alzheimer's Disease Diagnosis",
+    role: "第三作者",
+    href: "https://arxiv.org/abs/2603.24059",
+  },
+];
+---
+
+<BaseLayout
+  title="姚宣骋｜AI 算法与应用研发"
+  description="上海交通大学计算机科学与技术硕士，2027 届，关注多模态大模型、Agentic RL、模型评测与可信医疗 AI。"
+>
+  <div class="resume-page">
+    <header class="resume-header" id="top">
+      <div class="header-identity">
+        <p class="header-eyebrow">AI ALGORITHM · APPLICATION · EVALUATION</p>
+        <h1>姚宣骋</h1>
+        <p class="header-name-en">XUANCHENG YAO</p>
+        <p class="header-title">上海交通大学 · 计算机科学与技术硕士 · 2027 届</p>
+        <p class="header-focus">多模态大模型 / Agent 系统 / 模型评测 / 可信医疗 AI</p>
+      </div>
+
+      <div class="header-contact" aria-label="联系方式">
+        <div class="icon-links no-print">
+          <a class="icon-button" href="mailto:2212582443@sjtu.edu.cn" aria-label="发送邮件" title="发送邮件">
+            <Mail size={21} stroke-width={1.8} />
+          </a>
+          <a class="icon-button" href="tel:18757212591" aria-label="拨打电话" title="拨打电话">
+            <Phone size={20} stroke-width={1.8} />
+          </a>
+          <a class="icon-button" href="https://github.com/2212582443" target="_blank" rel="noreferrer" aria-label="查看 GitHub" title="GitHub">
+            <CodeXml size={21} stroke-width={1.8} />
+          </a>
+          <a class="icon-button" href="/resume-zh.pdf" target="_blank" aria-label="查看中文简历" title="中文简历 PDF">
+            <FileText size={20} stroke-width={1.8} />
+          </a>
+        </div>
+        <div class="contact-lines">
+          <p><span>邮箱</span><a href="mailto:2212582443@sjtu.edu.cn">2212582443@sjtu.edu.cn</a></p>
+          <p><span>手机</span><a href="tel:18757212591">187 5721 2591</a></p>
+          <p><span>GitHub</span><a href="https://github.com/2212582443" target="_blank" rel="noreferrer">github.com/2212582443</a></p>
+          <p><span>意向城市</span>上海 / 杭州</p>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="resume-section intro-section" aria-labelledby="about-title">
+        <div class="section-title">
+          <span id="about-title">个人简介 <small>ABOUT</small></span>
+        </div>
+        <div class="intro-grid">
+          <div class="profile-photo-wrap">
+            <Image
+              class="profile-photo"
+              src={headshot}
+              alt="姚宣骋个人照片"
+              widths={[320, 480]}
+              sizes="(max-width: 700px) 154px, 190px"
+              format="webp"
+              quality={88}
+              loading="eager"
+            />
+          </div>
+          <div class="intro-copy">
+            <p class="intro-lead">
+              上海交通大学计算机科学与技术本硕，当前在字节跳动电商智能对话方向从事多模态大模型算法实习。
+              研究与实践集中在多模态理解、Agentic RL、Agent 系统评测和可信医疗 AI。
+            </p>
+            <p>
+              我关注的不只是模型能力本身，也关注如何把训练、工具调用、自动评测和真实业务反馈连接成可持续迭代的闭环。
+              希望在 AI 算法与应用研发岗位中，继续积累技术判断、业务理解与完整交付能力。
+            </p>
+            <div class="keyword-list" aria-label="核心技术方向">
+              <span>多模态大模型</span>
+              <span>Agentic RL</span>
+              <span>Agent 系统</span>
+              <span>模型评测</span>
+              <span>可信医疗 AI</span>
+            </div>
+            <div class="intro-meta">
+              <span><BriefcaseBusiness size={16} /> 求职方向：AI 算法 / 应用研发</span>
+              <span><MapPin size={16} /> 上海 / 杭州</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="resume-section" aria-labelledby="experience-title">
+        <div class="section-title">
+          <span id="experience-title">实习经历 <small>EXPERIENCE</small></span>
+        </div>
+        <article class="resume-entry">
+          <div class="entry-details">
+            <BriefcaseBusiness class="entry-icon" size={21} stroke-width={1.7} />
+            <h3>字节跳动</h3>
+            <p class="entry-subtitle">多模态大模型算法实习生</p>
+            <p class="entry-caption">2026.04 - 2026.08</p>
+            <p class="entry-caption">中国交易与广告 · 电商 · 智能对话</p>
+          </div>
+          <div class="entry-content">
+            <p class="entry-quote">在真实电商客服场景中，把模型后训练、多工具 Agent 与自动评测连接为完整迭代闭环。</p>
+            <ul>
+              <li>围绕 7B 推理模型设计冷启动与强化学习训练方案，扩展训练框架以支持多轮工具调用。</li>
+              <li>参与 ReAct 多工具 Agent 的策略迭代，覆盖调用规划、执行反馈与结果校验。</li>
+              <li>搭建 Badcase 归因、Skill 生成和自动评测流程，用业务结果持续校准模型能力。</li>
+            </ul>
+            <div class="inline-tags" aria-label="实习技术关键词">
+              <span>Post-training</span><span>Agentic RL</span><span>ReAct</span><span>Evaluation</span>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="resume-section" aria-labelledby="research-title">
+        <div class="section-title">
+          <span id="research-title">科研成果 <small>SELECTED RESEARCH</small></span>
+        </div>
+        <div class="research-list">
+          {research.map((item) => (
+            <article class="resume-entry research-entry">
+              <div class="entry-details">
+                <BookOpen class="entry-icon" size={21} stroke-width={1.7} />
+                <h3>{item.title}</h3>
+                <p class="entry-subtitle">{item.venue}</p>
+                <p class="entry-caption">{item.caption}</p>
+                {item.links && (
+                  <div class="entry-links no-print">
+                    {item.links.map((link) => (
+                      <a href={link.href} target="_blank" rel="noreferrer">
+                        {link.label}<ArrowUpRight size={14} />
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <div class="entry-content research-content">
+                <p class="entry-quote">{item.brief}</p>
+                <div class:list={["research-visual", { "research-visual-generated": item.visual }]}> 
+                  {item.image ? (
+                    <Image
+                      src={item.image}
+                      alt={item.imageAlt ?? "论文方法框架图"}
+                      widths={[720, 1080, 1440]}
+                      sizes="(max-width: 760px) 100vw, 760px"
+                      format="webp"
+                      quality={90}
+                      loading="lazy"
+                    />
+                  ) : (
+                    <ProjectVisual variant="tree" />
+                  )}
+                </div>
+                <details class="entry-more">
+                  <summary><span>我的工作与方法</span><span class="details-mark">+</span></summary>
+                  <div class="entry-more-content">
+                    <p class="research-role">{item.role}</p>
+                    <ul>{item.details.map((detail) => <li>{detail}</li>)}</ul>
+                    <div class="inline-tags">{item.tags.map((tag) => <span>{tag}</span>)}</div>
+                  </div>
+                </details>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="resume-section" aria-labelledby="publication-title">
+        <div class="section-title">
+          <span id="publication-title">论文发表 <small>PUBLICATIONS</small></span>
+        </div>
+        <div class="publication-list">
+          {publications.map((publication) => (
+            <article class="publication-row">
+              <div class="publication-venue">{publication.venue}</div>
+              <div>
+                <h3>{publication.title}</h3>
+                <p>{publication.role}</p>
+              </div>
+              {publication.href ? (
+                <a class="publication-link no-print" href={publication.href} target="_blank" rel="noreferrer" aria-label={`查看 ${publication.title}`}>
+                  <ArrowUpRight size={18} stroke-width={1.7} />
+                </a>
+              ) : (
+                <span class="publication-status">ACCEPTED</span>
+              )}
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="resume-section" aria-labelledby="education-title">
+        <div class="section-title">
+          <span id="education-title">教育背景 <small>EDUCATION</small></span>
+        </div>
+        <article class="resume-entry education-entry">
+          <div class="entry-details">
+            <GraduationCap class="entry-icon" size={22} stroke-width={1.7} />
+            <h3>上海交通大学</h3>
+            <p class="entry-subtitle">计算机科学与技术 · 硕士</p>
+            <p class="entry-caption">2024.09 - 2027.03</p>
+          </div>
+          <div class="entry-content">
+            <p class="entry-quote">研究方向：多模态学习、强化学习与可信医疗 AI。</p>
+            <p>持续参与医学多模态、结构化推理与可验证学习研究，形成从数据、训练、评测到论文表达的完整科研经验。</p>
+          </div>
+        </article>
+        <article class="resume-entry education-entry">
+          <div class="entry-details">
+            <GraduationCap class="entry-icon" size={22} stroke-width={1.7} />
+            <h3>上海交通大学</h3>
+            <p class="entry-subtitle">计算机科学与技术 · 学士</p>
+            <p class="entry-caption">2020.09 - 2024.06</p>
+          </div>
+          <div class="entry-content">
+            <p class="entry-quote">扎实的计算机基础与连续科研训练。</p>
+            <p>专业排名 26/108，三次获得奖学金；获 MCM Honorable Mention。</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="resume-section skills-section" aria-labelledby="skills-title">
+        <div class="section-title">
+          <span id="skills-title">技术能力 <small>SKILLS</small></span>
+        </div>
+        <div class="skills-layout">
+          <div class="skills-heading">
+            <CodeXml size={22} stroke-width={1.7} />
+            <h3>技术栈概览</h3>
+          </div>
+          <div>
+            <p>以 Python / PyTorch 为主要研发环境，能够完成模型训练、Agent 系统实现、自动评测与实验分析。</p>
+            <div class="skill-keywords">
+              <span>Python · PyTorch</span>
+              <span>Multimodal LLM</span>
+              <span>Agentic RL</span>
+              <span>Agent Evaluation</span>
+              <span>Medical AI</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="resume-footer">
+      <div>
+        <strong>姚宣骋</strong>
+        <span>AI 算法与应用研发</span>
+      </div>
+      <div class="footer-links">
+        <a href="mailto:2212582443@sjtu.edu.cn"><Mail size={15} />2212582443@sjtu.edu.cn</a>
+        <a href="/resume-zh.pdf" target="_blank"><Download size={15} />中文简历 PDF</a>
+      </div>
+    </footer>
+  </div>
+</BaseLayout>

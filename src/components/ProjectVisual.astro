@@ -1,0 +1,55 @@
+---
+interface Props {
+  variant: "agent" | "tree" | "evidence" | "volume";
+}
+
+const { variant } = Astro.props;
+---
+
+<div class={`project-visual project-visual--${variant}`} aria-hidden="true">
+  {variant === "agent" && (
+    <>
+      <div class="visual-label label-a">DATA</div>
+      <div class="visual-label label-b">DAPO</div>
+      <div class="visual-label label-c">AGENT LOOP</div>
+      <div class="visual-label label-d">EVAL</div>
+      <div class="visual-line line-a"></div>
+      <div class="visual-line line-b"></div>
+      <div class="visual-line line-c"></div>
+      <div class="visual-pulse"></div>
+    </>
+  )}
+  {variant === "tree" && (
+    <>
+      <div class="tree-node tree-root">Q</div>
+      <div class="tree-node tree-left">Q1</div>
+      <div class="tree-node tree-right">Q2</div>
+      <div class="tree-node tree-leaf-a">A</div>
+      <div class="tree-node tree-leaf-b">B</div>
+      <div class="tree-node tree-leaf-c">C</div>
+      <div class="tree-branch branch-a"></div>
+      <div class="tree-branch branch-b"></div>
+      <div class="tree-branch branch-c"></div>
+      <div class="tree-branch branch-d"></div>
+    </>
+  )}
+  {variant === "evidence" && (
+    <>
+      <div class="scan-frame scan-a"><span></span></div>
+      <div class="scan-frame scan-b"><span></span></div>
+      <div class="evidence-path"></div>
+      <div class="evidence-copy">CLAIM → EVIDENCE → ANATOMY</div>
+    </>
+  )}
+  {variant === "volume" && (
+    <>
+      <div class="volume-slice slice-a"></div>
+      <div class="volume-slice slice-b"></div>
+      <div class="volume-slice slice-c"></div>
+      <div class="volume-slice slice-d"></div>
+      <div class="volume-axis axis-x">X</div>
+      <div class="volume-axis axis-y">Y</div>
+      <div class="volume-axis axis-z">Z</div>
+    </>
+  )}
+</div>

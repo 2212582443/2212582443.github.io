@@ -21,4 +21,10 @@ npm run build
 
 `https://2212582443.github.io`
 
-腾讯云 EdgeOne Makers 保留为国内访问与自定义域名方案。
+腾讯云 EdgeOne Makers 生产项目：`xuancheng-ai-portfolio`。本地生产构建通过后可更新已绑定项目：
+
+```bash
+edgeone makers deploy ./dist -n xuancheng-ai-portfolio -e production
+```
+
+已关联到生产环境的自定义域名会自动指向最新成功部署。

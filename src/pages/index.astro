@@ -6,7 +6,6 @@ import {
   BookOpen,
   BriefcaseBusiness,
   CodeXml,
-  Download,
   FileText,
   GraduationCap,
   Mail,
@@ -14,8 +13,8 @@ import {
   Phone,
 } from "@lucide/astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import ProjectVisual from "../components/ProjectVisual.astro";
 import headshot from "../assets/headshot.png";
+import qdtLogicTree from "../assets/research/qdt-logictree.png";
 import emadFramework from "../assets/research/emad-framework.png";
 import med3dFramework from "../assets/research/med3d-framework.png";
 import adReasoningFramework from "../assets/research/adreason-framework.png";
@@ -26,11 +25,10 @@ type ResearchItem = {
   caption: string;
   brief: string;
   role: string;
-  details: string[];
+  details: Array<{ label: string; content: string }>;
   tags: string[];
-  image?: ImageMetadata;
+  image: ImageMetadata;
   imageAlt?: string;
-  visual?: "tree";
   links?: Array<{ label: string; href: string }>;
 };
 
@@ -39,13 +37,27 @@ const research: ResearchItem[] = [
     title: "QDT",
     venue: "MICCAI 2026",
     caption: "第一作者 · 已录用",
-    brief: "问题驱动的可解释决策树：把医学图像分类改写为逐步提问与决策过程，让预测结果保留清晰、可追溯的推理路径。",
-    role: "负责方法设计、实验验证与论文写作",
-    visual: "tree",
+    brief: "把医学图像分类改写为一组有临床含义的连续问答，使模型不仅给出类别，还能暴露从图像证据到最终判断的完整决策路径。",
+    role: "作为第一作者，主导问题定义、框架设计、代码实现、实验验证与论文写作",
+    image: qdtLogicTree,
+    imageAlt: "QDT 在压疮分期任务中的问题驱动决策树与可视化推理路径",
     details: [
-      "构建 Question-Driven Decision Tree，以多步问题驱动医学图像分类。",
-      "通过知识蒸馏将结构化推理能力迁移到可部署模型中。",
-      "在皮肤病变分类场景中验证预测性能与决策可解释性。",
+      {
+        label: "研究问题",
+        content: "传统黑盒分类器难以解释真实决策过程，而概念瓶颈模型通常使用扁平概念，无法表达临床诊断中连续、条件化的判断逻辑。",
+      },
+      {
+        label: "方法设计",
+        content: "将诊断规则拆解为临床可核验的二元子问题，并以确定性逻辑树聚合答案；通过注意力特征融合建模子任务间关系，再以输出分布和空间注意力的多层知识蒸馏，缓解逻辑约束带来的性能损失。",
+      },
+      {
+        label: "个人贡献",
+        content: "完成 QDT 从研究假设到可复现实验的主体工作，包括任务形式化、教师-学生架构、软路径训练、消融与跨骨干验证，并推动临床规则整理和论文完整表达。",
+      },
+      {
+        label: "结果与意义",
+        content: "在压疮分期及两项公开皮肤病变基准上验证框架，逻辑约束学生模型在保持问题级可审计路径的同时，达到接近或超过强黑盒模型的表现。",
+      },
     ],
     tags: ["Decision Tree", "Distillation", "Medical AI"],
   },
@@ -53,14 +65,27 @@ const research: ResearchItem[] = [
     title: "EMAD",
     venue: "CVPR 2026",
     caption: "第二作者",
-    brief: "证据驱动的多模态诊断：让诊断结论显式连接临床证据与 3D 解剖区域，形成可追溯、可校验的医学推理链。",
-    role: "负责证据对齐、强化学习与实验验证",
+    brief: "让阿尔茨海默病诊断报告中的每一项关键结论都能回指临床字段和 3D 脑区，形成可追溯、可检查的证据链。",
+    role: "作为第二作者，负责证据对齐、可验证强化学习及相关实验验证",
     image: emadFramework,
     imageAlt: "EMAD 证据驱动多模态诊断框架图",
     details: [
-      "参与 Sentence-Evidence-Anatomy 分层证据对齐与 GTX-Distill。",
-      "以可执行规则构造强化学习奖励，约束临床一致性与推理结论。",
-      "连接结构化报告、临床证据与 3D MRI 解剖定位。",
+      {
+        label: "研究问题",
+        content: "现有多模态医学模型多停留在标签或风险分数层面，即使能生成报告，也缺少句子、临床证据和影像解剖位置之间的显式连接。",
+      },
+      {
+        label: "方法设计",
+        content: "提出 Sentence-Evidence-Anatomy 分层对齐，将报告句子先关联到临床证据，再定位到 3D MRI 解剖区域；利用 GTX-Distill 从少量密集标注迁移 grounding 能力，并以可执行规则驱动 GRPO 后训练。",
+      },
+      {
+        label: "个人贡献",
+        content: "参与证据对齐与蒸馏模块设计，实现临床格式、指南一致性和推理-结论一致性的可验证奖励，完成强化学习训练与 grounding、诊断和报告质量的系统实验。",
+      },
+      {
+        label: "结果与意义",
+        content: "模型能够联合利用 3D 结构 MRI 与临床变量生成结构化诊断报告，并把结论落到具体测量和脑区，为可信医学多模态生成提供可操作的验证接口。",
+      },
     ],
     tags: ["Grounding", "RLVR", "Multimodal", "3D MRI"],
     links: [{ label: "论文", href: "https://arxiv.org/abs/2602.19178" }],
@@ -69,14 +94,27 @@ const research: ResearchItem[] = [
     title: "Med3DInsight",
     venue: "IEEE JBHI",
     caption: "第二作者",
-    brief: "以 2D 多模态大模型生成的语义监督增强 3D 医学图像表征学习，探索跨维度知识迁移与稳健对齐。",
-    role: "负责模型实现与实验分析",
+    brief: "借助成熟 2D 多模态大模型提供的语义监督，学习同时保留高层语义和低层结构细节的通用 3D 医学图像表征。",
+    role: "作为第二作者，负责核心模型实现、训练管线与实验分析",
     image: med3dFramework,
     imageAlt: "Med3DInsight 三维医学图像预训练框架图",
     details: [
-      "参与 Plane-Slice-Aware Transformer 的实现与跨维度表征实验。",
-      "通过 Partial Optimal Transport 缓解生成文本噪声带来的错配。",
-      "验证预训练表示在 3D 分割与分类任务中的迁移能力。",
+      {
+        label: "研究问题",
+        content: "大规模 3D 医学图像-文本配对数据稀缺，直接套用 2D 视觉语言模型又会忽略体数据的空间方向，并引入切片描述噪声和跨维度错配。",
+      },
+      {
+        label: "方法设计",
+        content: "用 Plane-Slice-Aware Transformer 将 3D 体特征投影到带有平面与切片位置的 2D 表征空间；以 Partial Optimal Transport 选择性对齐 3D、切片和文本特征，并结合体数据重建保留细粒度结构。",
+      },
+      {
+        label: "个人贡献",
+        content: "完成 PSAT、跨模态对齐和下游微调相关实现，参与多数据集训练、对照实验与消融分析，系统排查 2D 语义迁移到 3D 场景时的空间与噪声问题。",
+      },
+      {
+        label: "结果与意义",
+        content: "预训练表示可迁移到 CT 与 MRI 的多器官、肿瘤分割及疾病分类任务，说明无需人工 3D 文本标注也能有效引入多模态语义监督。",
+      },
     ],
     tags: ["3D Vision", "MLLM", "Optimal Transport", "Pretraining"],
     links: [
@@ -88,14 +126,27 @@ const research: ResearchItem[] = [
     title: "AD-Reasoning",
     venue: "ICME 2026",
     caption: "第三作者",
-    brief: "融合结构 MRI 与多类临床信息，用可验证奖励约束诊断理由、结论和医学指南的一致性。",
-    role: "负责数据构建、奖励设计与系统评测",
+    brief: "融合结构 MRI、认知量表、遗传与生物标志物等异构信息，用临床指南和可验证奖励约束诊断理由与最终结论。",
+    role: "作为第三作者，负责数据构建、奖励设计和系统评测",
     image: adReasoningFramework,
     imageAlt: "AD-Reasoning 多模态指南推理框架图",
     details: [
-      "参与多模态诊疗样本构建、指南一致性奖励设计和系统评测。",
-      "以规则验证器约束输出格式、证据覆盖与推理决策一致性。",
-      "探索从监督微调到可验证强化学习的可信医疗 AI 训练路径。",
+      {
+        label: "研究问题",
+        content: "阿尔茨海默病诊断需要综合影像、认知、遗传和体液标志物，但常规模型难以解释各模态如何共同支持结论，也缺乏对临床指南的稳定遵循。",
+      },
+      {
+        label: "方法设计",
+        content: "构建涵盖结构 MRI 与多类临床字段的诊疗样本，经跨模态预训练和监督微调建立基础能力，再使用 GRPO 结合格式、NIA-AA 指南与推理一致性奖励进行可验证强化学习。",
+      },
+      {
+        label: "个人贡献",
+        content: "参与多模态数据清洗与诊疗问答构造，设计和实现指南要素覆盖、证据状态与推理-结论蕴含等奖励规则，并完成生成质量、分类能力和消融实验评测。",
+      },
+      {
+        label: "结果与意义",
+        content: "框架能生成结构化的诊断理由、分期结论与置信度，并通过规则验证器检查关键医学证据，为医疗场景中的 RLVR 训练提供了完整案例。",
+      },
     ],
     tags: ["GRPO", "Guideline Reasoning", "Multimodal", "Evaluation"],
     links: [{ label: "论文", href: "https://arxiv.org/abs/2603.24059" }],
@@ -187,12 +238,17 @@ const publications = [
           </div>
           <div class="intro-copy">
             <p class="intro-lead">
-              上海交通大学计算机科学与技术本硕，当前在字节跳动电商智能对话方向从事多模态大模型算法实习。
-              研究与实践集中在多模态理解、Agentic RL、Agent 系统评测和可信医疗 AI。
+              上海交通大学计算机科学与技术本硕，具备大模型后训练、多工具 Agent、自动评测与医学多模态研究的复合经验。
+              曾在字节跳动电商智能对话团队完成售后仲裁大模型的训练、评估与上线，并从零搭建 Agentic RL 训练链路和 Skill 自迭代系统。
             </p>
             <p>
-              我关注的不只是模型能力本身，也关注如何把训练、工具调用、自动评测和真实业务反馈连接成可持续迭代的闭环。
-              希望在 AI 算法与应用研发岗位中，继续积累技术判断、业务理解与完整交付能力。
+              能够把高噪声、长上下文、多模态的业务问题拆解为可训练、可评估、可部署的技术任务：从数据策略、SFT/GRPO 实验，
+              到 ReAct 工具编排、分布式 rollout、离线采样优化和服务化部署，均有完整实践。面对不确定问题时，习惯先建立可靠评测与诊断框架，
+              再通过可复现实验确定迭代方向，而不是停留在提示词或单点模型调用层面。
+            </p>
+            <p>
+              科研方面以第一作者完成 MICCAI 2026 录用工作，并参与 CVPR、IEEE JBHI、ICME 等多项研究，覆盖可解释决策树、
+              3D 医学视觉语言学习、证据 grounding 与可验证强化学习。适合需要同时理解模型、系统与业务约束的 AI 算法、Agent 应用和模型评测岗位。
             </p>
             <div class="keyword-list" aria-label="核心技术方向">
               <span>多模态大模型</span>
@@ -222,14 +278,64 @@ const publications = [
             <p class="entry-caption">中国交易与广告 · 电商 · 智能对话</p>
           </div>
           <div class="entry-content">
-            <p class="entry-quote">在真实电商客服场景中，把模型后训练、多工具 Agent 与自动评测连接为完整迭代闭环。</p>
-            <ul>
-              <li>围绕 7B 推理模型设计冷启动与强化学习训练方案，扩展训练框架以支持多轮工具调用。</li>
-              <li>参与 ReAct 多工具 Agent 的策略迭代，覆盖调用规划、执行反馈与结果校验。</li>
-              <li>搭建 Badcase 归因、Skill 生成和自动评测流程，用业务结果持续校准模型能力。</li>
-            </ul>
+            <p class="entry-quote">独立推进三条技术线，把复杂业务规则转化为可训练、可验证、可上线的大模型与 Agent 系统。</p>
+            <p class="experience-overview">
+              面向电商售后仲裁中长上下文、多模态证据与复杂 policy 并存的场景，负责从问题定义、数据构造、模型训练、实验分析到部署验证的完整链路。
+              工作同时覆盖模型能力提升和系统效率优化，并与运营团队围绕标注规范、badcase 与业务规则持续协作。
+            </p>
+
+            <div class="experience-projects">
+              <section class="experience-project">
+                <div class="experience-project-heading">
+                  <span>01</span>
+                  <h4>仲裁方案模型训练与上线</h4>
+                </div>
+                <p>
+                  将“是否退款与退款比例”的联合判断从通用模型直接调用升级为业务模型端到端决策。设计 SFT 冷启动与 GRPO 强化学习两阶段方案，
+                  基于 EasyR1 完成数据接入、训练、评估和线上部署。
+                </p>
+                <ul>
+                  <li>建立“线上模型初标、强模型复核、分歧样本人工精标、质量筛选”的数据流水线，在有限标注成本下形成数千级冷启动数据和万级强化学习数据。</li>
+                  <li>系统比较纯 GRPO、SFT + GRPO 及不同答案组织方式，通过对照与消融确定更稳定的训练配置，并定位 SFT 泛化与 RL 探索之间的权衡。</li>
+                  <li>核心判断指标达到九成以上并完成上线；相关准确率与召回率相较原有 zero-shot / critic 方案获得明显提升。</li>
+                </ul>
+              </section>
+
+              <section class="experience-project">
+                <div class="experience-project-heading">
+                  <span>02</span>
+                  <h4>Agentic RL 训练与部署链路</h4>
+                </div>
+                <p>
+                  针对单个仲裁 case 上下文长、图片多且不同纠纷依赖不同证据的问题，将一次性静态判定改造成 policy 驱动的主动取证 Agent，
+                  让模型在多轮循环中决定查什么证据、如何继续推理以及何时给出结论。
+                </p>
+                <ul>
+                  <li>在 verl 上扩展多模态训练链路，串联 Ray 分布式调度、vLLM 异步 rollout、LangGraph 风格 ReAct Loop、自定义 reward 与异常容错。</li>
+                  <li>围绕聊天记录、售后举证、物流、商品宣传信息与图像细节设计多类取证工具，统一训练环境和线上推理服务的调用协议。</li>
+                  <li>通过 profiling 识别远程工具调用为主要瓶颈，提出多轮预采样与 observation 缓存机制，将训练阶段的不稳定在线调用转为本地查询，显著改善吞吐和可复现性。</li>
+                  <li>维护 Agent 推理与工具服务模块，打通训练、离线评估和服务化部署，为后续策略迭代提供可复用基础设施。</li>
+                </ul>
+              </section>
+
+              <section class="experience-project">
+                <div class="experience-project-heading">
+                  <span>03</span>
+                  <h4>Agent Skill 自迭代与自动评测</h4>
+                </div>
+                <p>
+                  为缩短模型重训练周期，设计不更新参数的轻量迭代路径：从失败案例中归纳稳定错误模式，自动生成结构化 Skill，
+                  再通过统一评测判断是否进入版本库。
+                </p>
+                <ul>
+                  <li>实现“badcase 收集、错误归因、Skill 生成、效果验证、版本更新”闭环，将零散提示词调整转化为有基线、有回归测试的系统迭代。</li>
+                  <li>在判责场景完成落地与验证，并将方法扩展到方案任务，使 Skill 迭代与 SFT / RL 形成快慢结合的能力提升机制。</li>
+                  <li>沉淀技术方案、实验结论和交接材料，使相关链路能够被团队继续维护和复用。</li>
+                </ul>
+              </section>
+            </div>
             <div class="inline-tags" aria-label="实习技术关键词">
-              <span>Post-training</span><span>Agentic RL</span><span>ReAct</span><span>Evaluation</span>
+              <span>Post-training</span><span>Agentic RL</span><span>Agent System</span><span>Evaluation</span><span>Deployment</span>
             </div>
           </div>
         </article>
@@ -259,26 +365,29 @@ const publications = [
               </div>
               <div class="entry-content research-content">
                 <p class="entry-quote">{item.brief}</p>
-                <div class:list={["research-visual", { "research-visual-generated": item.visual }]}> 
-                  {item.image ? (
-                    <Image
-                      src={item.image}
-                      alt={item.imageAlt ?? "论文方法框架图"}
-                      widths={[720, 1080, 1440]}
-                      sizes="(max-width: 760px) 100vw, 760px"
-                      format="webp"
-                      quality={90}
-                      loading="lazy"
-                    />
-                  ) : (
-                    <ProjectVisual variant="tree" />
-                  )}
+                <div class="research-visual">
+                  <Image
+                    src={item.image}
+                    alt={item.imageAlt ?? "论文方法框架图"}
+                    widths={[720, 1080, 1440]}
+                    sizes="(max-width: 760px) 100vw, 760px"
+                    format="webp"
+                    quality={90}
+                    loading="lazy"
+                  />
                 </div>
                 <details class="entry-more">
-                  <summary><span>我的工作与方法</span><span class="details-mark">+</span></summary>
+                  <summary><span>详情</span><span class="details-mark">+</span></summary>
                   <div class="entry-more-content">
                     <p class="research-role">{item.role}</p>
-                    <ul>{item.details.map((detail) => <li>{detail}</li>)}</ul>
+                    <dl class="research-detail-list">
+                      {item.details.map((detail) => (
+                        <div>
+                          <dt>{detail.label}</dt>
+                          <dd>{detail.content}</dd>
+                        </div>
+                      ))}
+                    </dl>
                     <div class="inline-tags">{item.tags.map((tag) => <span>{tag}</span>)}</div>
                   </div>
                 </details>
@@ -368,12 +477,9 @@ const publications = [
     <footer class="resume-footer">
       <div>
         <strong>姚宣骋</strong>
-        <span>AI 算法与应用研发</span>
+        <span>AI 算法 · Agent 系统 · 模型评测</span>
       </div>
-      <div class="footer-links">
-        <a href="mailto:2212582443@sjtu.edu.cn"><Mail size={15} />2212582443@sjtu.edu.cn</a>
-        <a href="/resume-zh.pdf" target="_blank"><Download size={15} />中文简历 PDF</a>
-      </div>
+      <span>2027 届秋招 · 上海 / 杭州</span>
     </footer>
   </div>
 </BaseLayout>

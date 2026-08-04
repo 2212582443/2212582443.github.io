@@ -4,6 +4,6 @@ export default defineConfig({
   output: "static",
   site: "https://2212582443.github.io",
   vite: {
-    cacheDir: ".vite-cache",
+    cacheDir: process.env.ASTRO_CACHE_DIR ?? ".vite-cache",
   },
 });

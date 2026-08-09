@@ -37,26 +37,26 @@ const research: ResearchItem[] = [
     title: "QDT",
     venue: "MICCAI 2026",
     caption: "第一作者 · 已录用",
-    brief: "把医学图像分类改写为一组有临床含义的连续问答，使模型不仅给出类别，还能暴露从图像证据到最终判断的完整决策路径。",
-    role: "作为第一作者，主导问题定义、框架设计、代码实现、实验验证与论文写作",
+    brief: "将医学图像预测拆解为按临床规则串联的二元问题，使最终类别由可审计的问答路径确定，同时用知识蒸馏补偿逻辑约束带来的性能损失。",
+    role: "第一作者；完成从问题定义、方法实现到三套数据集实验与论文写作的完整研究",
     image: qdtLogicTree,
     imageAlt: "QDT 在压疮分期任务中的问题驱动决策树与可视化推理路径",
     details: [
       {
         label: "研究问题",
-        content: "传统黑盒分类器难以解释真实决策过程，而概念瓶颈模型通常使用扁平概念，无法表达临床诊断中连续、条件化的判断逻辑。",
+        content: "黑盒模型无法给出可核验的决策过程，传统概念瓶颈模型又以扁平概念代替临床诊断中连续、条件化的判断逻辑，通常需要在准确率和可解释性之间取舍。",
       },
       {
         label: "方法设计",
-        content: "将诊断规则拆解为临床可核验的二元子问题，并以确定性逻辑树聚合答案；通过注意力特征融合建模子任务间关系，再以输出分布和空间注意力的多层知识蒸馏，缓解逻辑约束带来的性能损失。",
+        content: "QDT 使用临床定义的子问题、注意力特征融合和确定性逻辑树生成诊断路径；训练时先获得高容量教师模型，再从主任务与子任务输出分布、空间注意力两个层面向逻辑约束学生模型蒸馏。",
       },
       {
-        label: "个人贡献",
-        content: "完成 QDT 从研究假设到可复现实验的主体工作，包括任务形式化、教师-学生架构、软路径训练、消融与跨骨干验证，并推动临床规则整理和论文完整表达。",
+        label: "数据与验证",
+        content: "在 2,292 张压疮图像、25,331 张 ISIC-2019 图像和 5,240 张 MILK10k 图像上验证，覆盖 6、8、10 类诊断任务，并在 ResNet、VGG、DenseNet 和 ViT 等骨干上检验通用性。",
       },
       {
-        label: "结果与意义",
-        content: "在压疮分期及两项公开皮肤病变基准上验证框架，逻辑约束学生模型在保持问题级可审计路径的同时，达到接近或超过强黑盒模型的表现。",
+        label: "量化结果",
+        content: "ResNet50-QDT 在 ISIC-2019 上达到 84.18% Accuracy，超过 CBM 的 80.97% 和 DCR 的 72.21%；Macro-F1 较原始 ResNet50 提升 5.21 个百分点。学生模型与教师模型的性能差距通常小于 1 个百分点，同时保留确定性问题路径。",
       },
     ],
     tags: ["Decision Tree", "Distillation", "Medical AI"],
@@ -64,27 +64,27 @@ const research: ResearchItem[] = [
   {
     title: "EMAD",
     venue: "CVPR 2026",
-    caption: "第二作者",
-    brief: "让阿尔茨海默病诊断报告中的每一项关键结论都能回指临床字段和 3D 脑区，形成可追溯、可检查的证据链。",
-    role: "作为第二作者，负责证据对齐、可验证强化学习及相关实验验证",
+    caption: "第二作者 · 已录用",
+    brief: "为阿尔茨海默病生成结构化诊断报告，并把报告句子逐级关联到临床证据字段和 3D 脑区，使诊断结论具备可检查的证据链。",
+    role: "第二作者；参与证据驱动的 3D 医学多模态诊断、Grounding 与可验证强化学习研究",
     image: emadFramework,
     imageAlt: "EMAD 证据驱动多模态诊断框架图",
     details: [
       {
         label: "研究问题",
-        content: "现有多模态医学模型多停留在标签或风险分数层面，即使能生成报告，也缺少句子、临床证据和影像解剖位置之间的显式连接。",
+        content: "多模态医学模型通常只输出标签或风险分数；即使生成报告，也很少说明每个判断来自哪项临床测量，以及影像证据位于 3D MRI 的哪个解剖区域。",
       },
       {
         label: "方法设计",
-        content: "提出 Sentence-Evidence-Anatomy 分层对齐，将报告句子先关联到临床证据，再定位到 3D MRI 解剖区域；利用 GTX-Distill 从少量密集标注迁移 grounding 能力，并以可执行规则驱动 GRPO 后训练。",
+        content: "提出 Sentence-Evidence-Anatomy 分层 Grounding，将报告句子先检索到临床证据，再以证据为条件定位 3D MRI 脑区；GTX-Distill 用少量密集标注教师向生成报告上的学生迁移 Grounding，Executable-Rule GRPO 则约束格式、NIA-AA 一致性和推理-诊断蕴含关系。",
       },
       {
-        label: "个人贡献",
-        content: "参与证据对齐与蒸馏模块设计，实现临床格式、指南一致性和推理-结论一致性的可验证奖励，完成强化学习训练与 grounding、诊断和报告质量的系统实验。",
+        label: "数据与任务",
+        content: "基于 ADNI 与 AIBL 构建 AD-MultiSense，包含 2,619 名受试者的 10,378 个多模态样本，联合 3D sMRI、人口统计、病史、认知、实验室、遗传和生物标志物信息，评估二分类、三分类、报告生成与两级 Grounding。",
       },
       {
-        label: "结果与意义",
-        content: "模型能够联合利用 3D 结构 MRI 与临床变量生成结构化诊断报告，并把结论落到具体测量和脑区，为可信医学多模态生成提供可操作的验证接口。",
+        label: "量化结果",
+        content: "CN/CI 与 CN/MCI 任务分别达到 93.33% 和 92.82% Accuracy，CN/MCI/AD 三分类达到 89.4% Accuracy、87.8% Macro-F1。SEA + GTX-Distill 的句子-证据 R@3 达 0.84，证据条件脑区分割 Dice 从 0.76 提升至 0.82；完整规则奖励将格式有效率、NIA-AA 一致性和推理蕴含分别提升至 99.1%、90.8% 和 87.6%。",
       },
     ],
     tags: ["Grounding", "RLVR", "Multimodal", "3D MRI"],
@@ -92,57 +92,57 @@ const research: ResearchItem[] = [
   },
   {
     title: "Med3DInsight",
-    venue: "IEEE JBHI",
-    caption: "第二作者",
-    brief: "借助成熟 2D 多模态大模型提供的语义监督，学习同时保留高层语义和低层结构细节的通用 3D 医学图像表征。",
-    role: "作为第二作者，负责核心模型实现、训练管线与实验分析",
+    venue: "IEEE JBHI · 2026",
+    caption: "第二作者 · 已发表",
+    brief: "利用 2D 多模态大模型生成的切片语义监督预训练 3D 医学图像编码器，同时保留疾病语义和精细解剖结构，服务分割与分类任务。",
+    role: "第二作者；参与 2D 多模态知识向 3D 医学视觉表征迁移的框架研究与实验验证",
     image: med3dFramework,
     imageAlt: "Med3DInsight 三维医学图像预训练框架图",
     details: [
       {
         label: "研究问题",
-        content: "大规模 3D 医学图像-文本配对数据稀缺，直接套用 2D 视觉语言模型又会忽略体数据的空间方向，并引入切片描述噪声和跨维度错配。",
+        content: "大规模 3D 医学图像-文本配对数据稀缺；直接使用 2D 视觉语言模型会丢失体数据的平面与切片位置，还会受到自动生成描述噪声和 2D/3D 表征错配影响。",
       },
       {
         label: "方法设计",
-        content: "用 Plane-Slice-Aware Transformer 将 3D 体特征投影到带有平面与切片位置的 2D 表征空间；以 Partial Optimal Transport 选择性对齐 3D、切片和文本特征，并结合体数据重建保留细粒度结构。",
+        content: "Plane-Slice-Aware Transformer 通过可学习查询与平面-切片位置编码连接 3D 体特征和 2D 图文空间；mini-batch Partial Optimal Transport 只匹配可靠的跨模态内容，体数据重建分支保留低层结构细节。",
       },
       {
-        label: "个人贡献",
-        content: "完成 PSAT、跨模态对齐和下游微调相关实现，参与多数据集训练、对照实验与消融分析，系统排查 2D 语义迁移到 3D 场景时的空间与噪声问题。",
+        label: "实验范围",
+        content: "在 8 个 3D 分割数据集和 2 个疾病分类数据集上评估，覆盖 CT、MRI、19 类器官或肿瘤，以及阿尔茨海默病与帕金森病识别，并测试不同骨干、视觉语言模型、切片采样和低数据微调设置。",
       },
       {
-        label: "结果与意义",
-        content: "预训练表示可迁移到 CT 与 MRI 的多器官、肿瘤分割及疾病分类任务，说明无需人工 3D 文本标注也能有效引入多模态语义监督。",
+        label: "量化结果",
+        content: "在 8 个分割数据集上，平均 Dice 较最佳自监督基线提升超过 1 个百分点，平均 HD95 降低 0.7 mm；加入平面-切片位置编码后，OASIS1 平均 Dice 再提升 0.82 个百分点。结果表明无需人工 3D 文本标注，也能把 2D 多模态语义稳定迁移到 3D 下游任务。",
       },
     ],
     tags: ["3D Vision", "MLLM", "Optimal Transport", "Pretraining"],
-    links: [{ label: "论文", href: "https://arxiv.org/abs/2509.09064" }],
+    links: [{ label: "论文", href: "https://doi.org/10.1109/JBHI.2025.3609739" }],
   },
   {
     title: "AD-Reasoning",
     venue: "ICME 2026",
     caption: "第三作者",
-    brief: "融合结构 MRI、认知量表、遗传与生物标志物等异构信息，用临床指南和可验证奖励约束诊断理由与最终结论。",
-    role: "作为第三作者，负责数据构建、奖励设计和系统评测",
+    brief: "联合结构 MRI 与六类临床信息生成阿尔茨海默病分期理由，使用 NIA-AA 规则和可验证奖励约束证据覆盖、输出结构与最终诊断。",
+    role: "第三作者；参与多模态临床推理数据、指南约束与强化学习后训练研究",
     image: adReasoningFramework,
     imageAlt: "AD-Reasoning 多模态指南推理框架图",
     details: [
       {
         label: "研究问题",
-        content: "阿尔茨海默病诊断需要综合影像、认知、遗传和体液标志物，但常规模型难以解释各模态如何共同支持结论，也缺乏对临床指南的稳定遵循。",
+        content: "阿尔茨海默病诊断依赖影像、认知、遗传和体液标志物等异构证据，常规模型难以说明各模态如何共同支持结论，也无法稳定遵循临床分期标准。",
       },
       {
         label: "方法设计",
-        content: "构建涵盖结构 MRI 与多类临床字段的诊疗样本，经跨模态预训练和监督微调建立基础能力，再使用 GRPO 结合格式、NIA-AA 指南与推理一致性奖励进行可验证强化学习。",
+        content: "以 3D ViT 和 Longformer 编码结构 MRI 与临床文本，通过双向跨模态融合完成预训练和监督微调；随后采用 GRPO，并组合格式、NIA-AA 诊断和自然语言蕴含奖励，优化结构化 Reasoning/Diagnosis/Confidence 输出。",
       },
       {
-        label: "个人贡献",
-        content: "参与多模态数据清洗与诊疗问答构造，设计和实现指南要素覆盖、证据状态与推理-结论蕴含等奖励规则，并完成生成质量、分类能力和消融实验评测。",
+        label: "数据与训练",
+        content: "AD-MultiSense 汇集 2,619 名受试者的 10,378 个访视样本，覆盖 sMRI 与人口统计、病史、认知、实验室、遗传、生物标志物六类临床信息；采用 PT、SFT、RFT 三阶段训练并按受试者划分训练、验证和测试集。",
       },
       {
-        label: "结果与意义",
-        content: "框架能生成结构化的诊断理由、分期结论与置信度，并通过规则验证器检查关键医学证据，为医疗场景中的 RLVR 训练提供了完整案例。",
+        label: "量化结果",
+        content: "CN/CI 任务达到 93.33% Accuracy、91.83% AUC，CN/MCI 任务达到 92.82% Accuracy、90.09% AUC；移除预训练或强化学习后处理均造成明显下降。多模态输入优于单独影像或临床数据，验证了跨模态融合和指南奖励的作用。",
       },
     ],
     tags: ["GRPO", "Guideline Reasoning", "Multimodal", "Evaluation"],
@@ -153,20 +153,20 @@ const research: ResearchItem[] = [
 const publications = [
   {
     venue: "MICCAI 2026",
-    title: "QDT: Question-Driven Decision Tree for Interpretable Prediction",
+    title: "Question-Driven Decision Tree via Knowledge Distillation for Interpretable Prediction",
     role: "第一作者 · 已录用",
   },
   {
     venue: "CVPR 2026",
     title: "EMAD: Evidence-Centric Grounded Multimodal Diagnosis for Alzheimer's Disease",
-    role: "第二作者",
+    role: "第二作者 · 已录用",
     href: "https://arxiv.org/abs/2602.19178",
   },
   {
-    venue: "IEEE JBHI",
+    venue: "IEEE JBHI 2026",
     title: "Enhancing 3D Medical Image Understanding with Pretraining Aided by 2D Multimodal Large Language Models",
-    role: "第二作者",
-    href: "https://arxiv.org/abs/2509.09064",
+    role: "第二作者 · 已发表",
+    href: "https://doi.org/10.1109/JBHI.2025.3609739",
   },
   {
     venue: "ICME 2026",
@@ -178,17 +178,17 @@ const publications = [
 ---
 
 <BaseLayout
-  title="姚宣骋｜AI 算法与应用研发"
-  description="上海交通大学计算机科学与技术硕士，2027 届，关注多模态大模型、Agentic RL、模型评测与可信医疗 AI。"
+  title="姚宣骋｜大模型后训练与 Agent 算法"
+  description="具备大模型后训练、Agentic RL、自动评测与医学多模态研发经验，完成电商仲裁模型训练上线与多项顶会期刊研究。"
 >
   <div class="resume-page">
     <header class="resume-header" id="top">
       <div class="header-identity">
-        <p class="header-eyebrow">AI ALGORITHM · APPLICATION · EVALUATION</p>
+        <p class="header-eyebrow">POST-TRAINING · AGENTIC RL · MULTIMODAL AI</p>
         <h1>姚宣骋</h1>
         <p class="header-name-en">XUANCHENG YAO</p>
         <p class="header-title">上海交通大学 · 计算机科学与技术硕士 · 2027 届</p>
-        <p class="header-focus">多模态大模型 / Agent 系统 / 模型评测 / 可信医疗 AI</p>
+        <p class="header-focus">大模型后训练 / Agentic RL / Agent 系统 / 模型评测</p>
       </div>
 
       <div class="header-contact" aria-label="联系方式">
@@ -235,20 +235,20 @@ const publications = [
           </div>
           <div class="intro-copy">
             <p class="intro-lead">
-              上海交通大学计算机科学与技术本硕，具备大模型后训练、多工具 Agent、自动评测与医学多模态研究的复合经验。
-              曾在字节跳动电商智能对话团队完成售后仲裁大模型的训练、评估与上线，并从零搭建 Agentic RL 训练链路和 Skill 自迭代系统。
+              具备大模型后训练、Agentic RL、自动评测与医学多模态研发经验，能够独立推进从问题定义、数据构造、训练实验到评估部署的完整技术闭环。
+              在字节跳动电商智能对话团队完成售后仲裁方案模型训练上线，并搭建主动取证 Agent 的强化学习链路与 Skill 自迭代系统。
             </p>
             <p>
-              能够把高噪声、长上下文、多模态的业务问题拆解为可训练、可评估、可部署的技术任务：从数据策略、SFT/GRPO 实验，
-              到 ReAct 工具编排、分布式 rollout、离线采样优化和服务化部署，均有完整实践。面对不确定问题时，习惯先建立可靠评测与诊断框架，
-              再通过可复现实验确定迭代方向，而不是停留在提示词或单点模型调用层面。
+              面向长上下文、多模态证据和复杂业务规则并存的任务，构建 5k SFT、10k RL 训练数据及 9k 测试集，通过 EasyR1 完成 SFT + GRPO 对照实验，
+              退款判断和退款比例的最佳准确率分别达到 93.55% 和 85.27%。在 Agent 方向，基于 verl、Ray 与 vLLM 串联多轮 ReAct、工具调用、奖励函数和离线评估，
+              并以工具 observation 预采样解决在线调用带来的吞吐与稳定性问题。
             </p>
             <p>
-              科研方面以第一作者完成 MICCAI 2026 录用工作，并参与 CVPR、IEEE JBHI、ICME 等多项研究，覆盖可解释决策树、
-              3D 医学视觉语言学习、证据 grounding 与可验证强化学习。适合需要同时理解模型、系统与业务约束的 AI 算法、Agent 应用和模型评测岗位。
+              在医疗 AI 方向，以第一作者完成 MICCAI 2026 录用论文 QDT，以第二作者参与 CVPR 2026 与 IEEE JBHI 工作，并以第三作者参与 ICME 2026 工作，
+              覆盖可解释决策树、3D 视觉语言预训练、证据 Grounding 和 RLVR。技术工作强调可训练、可评测和可部署，适合大模型算法、Agent 应用算法与模型评测岗位。
             </p>
             <div class="keyword-list" aria-label="核心技术方向">
-              <span>多模态大模型</span>
+              <span>大模型后训练</span>
               <span>Agentic RL</span>
               <span>Agent 系统</span>
               <span>模型评测</span>
@@ -270,15 +270,15 @@ const publications = [
           <div class="entry-details">
             <BriefcaseBusiness class="entry-icon" size={21} stroke-width={1.7} />
             <h3>字节跳动</h3>
-            <p class="entry-subtitle">多模态大模型算法实习生</p>
+            <p class="entry-subtitle">算法实习生</p>
             <p class="entry-caption">2026.04 - 2026.08</p>
-            <p class="entry-caption">中国交易与广告 · 电商 · 智能对话</p>
+            <p class="entry-caption">Data · 中国交易与广告 · 电商 · 业务策略与技术 · 智能对话</p>
           </div>
           <div class="entry-content">
-            <p class="entry-quote">独立推进三条技术线，把复杂业务规则转化为可训练、可验证、可上线的大模型与 Agent 系统。</p>
+            <p class="entry-quote">围绕电商售后仲裁，独立负责方案模型训练上线、Agentic RL 训练框架和 Agent Skill 自迭代三条技术线。</p>
             <p class="experience-overview">
-              面向电商售后仲裁中长上下文、多模态证据与复杂 policy 并存的场景，负责从问题定义、数据构造、模型训练、实验分析到部署验证的完整链路。
-              工作同时覆盖模型能力提升和系统效率优化，并与运营团队围绕标注规范、badcase 与业务规则持续协作。
+              面向消费者与商家纠纷的一审仲裁场景，将聊天、举证、物流、商品宣传和图像等异构信息转化为可训练任务，
+              完成从业务问题定义、数据清洗、SFT/RL 训练和消融实验到模型部署的完整闭环，并与运营团队协作梳理 policy、标注规范和 badcase。
             </p>
 
             <div class="experience-projects">
@@ -288,13 +288,14 @@ const publications = [
                   <h4>仲裁方案模型训练与上线</h4>
                 </div>
                 <p>
-                  将“是否退款与退款比例”的联合判断从通用模型直接调用升级为业务模型端到端决策。设计 SFT 冷启动与 GRPO 强化学习两阶段方案，
-                  基于 EasyR1 完成数据接入、训练、评估和线上部署。
+                  针对原方案依赖通用模型 zero-shot 与 SFT critic、仅退款召回率仅 52.72% 的瓶颈，将“是否退款 + 退款比例”升级为端到端模型决策，
+                  基于 EasyR1 设计 SFT 冷启动与 GRPO 强化学习两阶段训练并完成上线。
                 </p>
                 <ul>
-                  <li>建立“线上模型初标、强模型复核、分歧样本人工精标、质量筛选”的数据流水线，在有限标注成本下形成数千级冷启动数据和万级强化学习数据。</li>
-                  <li>系统比较纯 GRPO、SFT + GRPO 及不同答案组织方式，通过对照与消融确定更稳定的训练配置，并定位 SFT 泛化与 RL 探索之间的权衡。</li>
-                  <li>核心判断指标达到九成以上并完成上线；相关准确率与召回率相较原有 zero-shot / critic 方案获得明显提升。</li>
+                  <li>建立“线上模型初标、强模型二次打标、分歧样本人工精标、数据筛选”流水线，构建 5k SFT 冷启动数据、10k RL 训练数据和 9k 测试集。</li>
+                  <li>比较纯 GRPO 与 SFT + GRPO、答案在前与答案在后四组配置；SFT + GRPO 的退款判断准确率达到 93.55%，较纯 GRPO 的 92.48% 提升 1.07 个百分点。</li>
+                  <li>纯 GRPO 配置的退款比例准确率最高达到 85.27%，实验同时揭示 SFT 初始化对退款判断有益、但可能限制比例任务 RL 探索的差异。</li>
+                  <li>完成模型训练、离线评估与部署上线，形成可复用的数据构造、训练对照和上线验证流程。</li>
                 </ul>
               </section>
 
@@ -304,14 +305,15 @@ const publications = [
                   <h4>Agentic RL 训练与部署链路</h4>
                 </div>
                 <p>
-                  针对单个仲裁 case 上下文长、图片多且不同纠纷依赖不同证据的问题，将一次性静态判定改造成 policy 驱动的主动取证 Agent，
-                  让模型在多轮循环中决定查什么证据、如何继续推理以及何时给出结论。
+                  针对单个仲裁 case 可包含上万 token 文本及多张图片、不同纠纷依赖不同证据的问题，将长上下文静态判定改造成 policy 驱动的主动取证 Agent，
+                  让模型在多轮 ReAct 循环中选择证据、调用工具并完成判责或方案决策。
                 </p>
                 <ul>
-                  <li>在 verl 上扩展多模态训练链路，串联 Ray 分布式调度、vLLM 异步 rollout、LangGraph 风格 ReAct Loop、自定义 reward 与异常容错。</li>
-                  <li>围绕聊天记录、售后举证、物流、商品宣传信息与图像细节设计多类取证工具，统一训练环境和线上推理服务的调用协议。</li>
-                  <li>通过 profiling 识别远程工具调用为主要瓶颈，提出多轮预采样与 observation 缓存机制，将训练阶段的不稳定在线调用转为本地查询，显著改善吞吐和可复现性。</li>
-                  <li>维护 Agent 推理与工具服务模块，打通训练、离线评估和服务化部署，为后续策略迭代提供可复用基础设施。</li>
+                  <li>基于 verl 扩展多模态 Agent RL 链路，串联 Ray 分布式调度、vLLM 异步 rollout、LangGraph 风格 Agent Loop、工具调用和自定义 reward。</li>
+                  <li>设计聊天证据整理、售后举证整理、物流核验、OCR 宣传点梳理、高清看图 5 类工具，使模型能够按纠纷类型主动获取关键证据。</li>
+                  <li>提出离线工具采样：为每个 case 预采集全部工具 observation，非确定性工具默认采样 3 轮，训练时按 case 与 action 查询缓存，替代耗时且不稳定的在线远程调用。</li>
+                  <li>未经 RL 训练的 Agent baseline 在是否仅退款和退款比例任务上分别达到 62.9% 与 55.6% Accuracy，验证系统链路可运行，也明确了后训练的提升空间。</li>
+                  <li>同步打通 Agent 推理服务和工具服务，覆盖训练、离线评估及服务化部署。</li>
                 </ul>
               </section>
 
@@ -321,13 +323,13 @@ const publications = [
                   <h4>Agent Skill 自迭代与自动评测</h4>
                 </div>
                 <p>
-                  为缩短模型重训练周期，设计不更新参数的轻量迭代路径：从失败案例中归纳稳定错误模式，自动生成结构化 Skill，
-                  再通过统一评测判断是否进入版本库。
+                  针对 SFT/RL 标注成本高、迭代周期长的问题，设计不更新模型参数的轻量修复路径：从失败案例中归纳错误模式，自动生成结构化 Skill，
+                  再通过评测决定是否更新 Skill 库。
                 </p>
                 <ul>
-                  <li>实现“badcase 收集、错误归因、Skill 生成、效果验证、版本更新”闭环，将零散提示词调整转化为有基线、有回归测试的系统迭代。</li>
-                  <li>在判责场景完成落地与验证，并将方法扩展到方案任务，使 Skill 迭代与 SFT / RL 形成快慢结合的能力提升机制。</li>
-                  <li>沉淀技术方案、实验结论和交接材料，使相关链路能够被团队继续维护和复用。</li>
+                  <li>实现“badcase 收集、错误模式归纳、Skill 生成、效果验证、Skill 库更新”闭环，以结构化提示词和规则向 Agent 注入可复用经验。</li>
+                  <li>在判责场景完成系统落地与有效性验证，并完成向方案任务扩展的核心代码，使 Skill 快速修复与 SFT/RL 参数训练形成互补。</li>
+                  <li>沉淀总体方案、实验结论和交接材料，为两个场景后续统一管理 Skill 提供工程基础。</li>
                 </ul>
               </section>
             </div>
@@ -458,13 +460,13 @@ const publications = [
             <h3>技术栈概览</h3>
           </div>
           <div>
-            <p>以 Python / PyTorch 为主要研发环境，能够完成模型训练、Agent 系统实现、自动评测与实验分析。</p>
+            <p>以 Python / PyTorch 为主要研发环境，能够完成数据构造、大模型后训练、多工具 Agent、自动评测与服务化验证。</p>
             <div class="skill-keywords">
               <span>Python · PyTorch</span>
-              <span>Multimodal LLM</span>
-              <span>Agentic RL</span>
+              <span>SFT · GRPO</span>
+              <span>verl · vLLM</span>
               <span>Agent Evaluation</span>
-              <span>Medical AI</span>
+              <span>Multimodal AI</span>
             </div>
           </div>
         </div>

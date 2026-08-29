@@ -179,7 +179,7 @@ const publications = [
 
 <BaseLayout
   title="姚宣骋｜大模型后训练与 Agent 算法"
-  description="聚焦大模型后训练、Agentic RL 与多模态推理，拥有电商仲裁模型上线、Skill 自迭代 Agent 与多模态主动取证 RL 实践。"
+  description="聚焦大模型后训练、Agentic RL 与多模态推理，拥有 Critic + Rethink、Skill 自迭代 Multi-Agent 与动态经验注入实践。"
 >
   <div class="resume-page">
     <header class="resume-header" id="top">
@@ -235,16 +235,16 @@ const publications = [
           </div>
           <div class="intro-copy">
             <p class="intro-lead">
-              聚焦大模型后训练、多模态推理与 Agent 系统，能够将复杂业务规则拆解为可训练、可评测、可上线的算法系统。
-              在字节跳动电商售后仲裁方向独立负责方案模型 SFT + GRPO 端到端训练，主导判责多 Agent、Skill 自迭代评测与主动取证 RL 链路。
+              聚焦大模型后训练、多模态推理与 Agent 系统，能够将复杂业务规则拆解为可训练、可评测、可迭代的算法系统。
+              在字节跳动电商售后仲裁方向负责判责模型优化，完成 Critic + Rethink、Agentic RL、Skill 自迭代 Multi-Agent 与 Dynamic Agentic RL 四条技术链路。
             </p>
             <p>
-              围绕“证据获取—经验复用—策略学习”打通两条技术闭环：一条用分侧并发推理、全量 Trace 和回归评测实现 Skill 快速迭代；
-              另一条基于 verl、Ray 与 vLLM 实现多轮 ReAct、离线工具采样与多模态 RL，再通过 Dynamic Skill 让模型学会按需选择经验。
+              围绕“判责纠错—自主取证—经验沉淀—动态注入”建立完整演进路径：以 Critic 驱动两轮 Rethink 突破阈值式 Reward Model 的能力上限，
+              再将规则与证据拆为工具，通过 Agentic RL 学习取证策略，并用 Evaluation Harness 和 Trace Replay 将错误转化为版本化 Skill。
             </p>
             <p>
               在医疗 AI 方向，以第一作者完成 MICCAI 录用论文 QDT，以第二作者参与 CVPR 与 IEEE JBHI 工作，并以第三作者参与 ICME 工作，
-              覆盖可解释决策树、3D 视觉语言预训练、证据 Grounding 和 RLVR。技术工作强调可训练、可评测和可部署，适合大模型算法、Agent 应用算法与模型评测岗位。
+              覆盖可解释决策树、3D 视觉语言预训练、证据 Grounding 和 RLVR。技术工作强调训练闭环、评测口径和可解释证据链，适合大模型算法、Agent 算法与多模态算法岗位。
             </p>
             <div class="keyword-list" aria-label="核心技术方向">
               <span>大模型后训练</span>
@@ -274,84 +274,93 @@ const publications = [
             <p class="entry-caption">Data · 中国交易与广告 · 电商 · 业务策略与技术 · 智能对话</p>
           </div>
           <div class="entry-content">
-            <p class="entry-quote">独立交付仲裁方案模型后训练，主导判责 Agent 与 Agentic RL 两条技术主线，并将 Skill 从工程注入推进为可学习的策略动作。</p>
+            <p class="entry-quote">负责平台仲裁判责模型优化，在 90% Accuracy 约束下将 Recall 从 78.2% 提升至 90.8%，最终 Accuracy 93.2%、Coverage 100%。</p>
             <p class="experience-overview">
-              将一审仲裁拆分为“支持哪一方”的判责任务和“是否仅退款、退款比例”的方案任务。
-              方案模型完成 SFT + GRPO 训练并支撑 V2 上线；判责方向建立“API + Skill 快速验证—开源模型 Agentic RL 能力内化—Dynamic Skill 主动选择经验”的完整技术路线。
+              用户与商家发生纠纷且协商无果后，平台依据交易规则、用户举证要求、商家举证要求及双方证据关系给出最终判定。
+              围绕该判责模块，建立“Critic 自纠错—Agentic RL 自主取证—Multi-Agent Skill 自迭代—Dynamic Skill 动态增强”的完整技术路线。
             </p>
 
             <div class="experience-projects">
               <section class="experience-project">
                 <div class="experience-project-heading">
                   <span>01</span>
-                  <h4>仲裁方案模型训练与上线</h4>
+                  <h4>Critic + Rethink：两轮自纠错判责</h4>
                 </div>
                 <p>
-                  在判责结果支持用户后，进一步预测退货退款或仅退款及其比例。独立负责数据构造、SFT 冷启动、GRPO/DAPO 训练与指标交付，并完成 Critic + Rethink 链路的模型侧适配，支撑方案模型 V2 上线。
+                  将基于 BT-Loss Reward Model 打分卡阈值的原方案升级为“豆包基座 + Critic Model”模式：豆包先给出判责结果，
+                  Critic 判断结果是否正确并输出错误原因；首轮判错时让豆包基于反馈重新推理，二次校验后再采纳或反转。
                 </p>
                 <ul>
-                  <li>建立“线上模型初标、强模型二次打标、分歧样本人工精标、数据筛选”流水线，构建 5k SFT 冷启动数据、10k RL 训练数据和 9k 测试集。</li>
-                  <li>围绕答案组织顺序与 SFT 冷启动开展四组对照。选定配置在 9k 测试集上仅退款判断 Accuracy 为 93.55%、退款比例 Accuracy 为 82.80%；同一答案顺序下，仅退款判断较纯 GRPO 提升 1.07 个百分点。</li>
-                  <li>纯 GRPO 配置的比例准确率最高为 85.27%，但仅退款判断略低；最终按“先判准退款类型、再优化比例”的业务优先级选择 SFT + GRPO 配方。</li>
-                  <li>作为模型训练核心执行者支撑团队 V2 系统实现 98% 机审覆盖率；首答正确率 91.5%，经 Critic + Rethink 后达到 98.1%。</li>
-                  <li>协商期推全后，团队系统带动支持用户执行成功量 +6.5k 单，支持用户覆盖率提升 8.6 个百分点（39.6% → 48.2%）。</li>
+                  <li>没有在首轮 Critic 判错后直接反转：首轮基座准确率约 78%，Critic 判为正确的部分约 90% 准确，但判为错误的部分只有约 60% 可被安全反转；先 Rethink 能显著缩小最终反转量，降低误反转对整体准确率的负贡献。</li>
+                  <li>通过多次采样获得同一问题下的正确与错误推理轨迹，对难以自然形成正负样本的 Case 使用结果约束引导推理，保持 Critic 训练数据的正负均衡与错误类型覆盖。</li>
+                  <li>先以随机样本 SFT 冷启动稳定“思考过程 + 是否正确”的结构化输出，再以 GRPO/DAPO 训练 Critic；随后回放首阶段轨迹，用 Critic 错误原因触发豆包 Rethink，补充二次推理分布并继续 RL。</li>
+                  <li>在 90% Accuracy 约束下，Recall 从阈值方案的 78.2% 提升至 85.3%，Coverage 达 100%。</li>
                 </ul>
               </section>
 
               <section class="experience-project">
                 <div class="experience-project-heading">
                   <span>02</span>
-                  <h4>判责 Skill 自迭代 Agent 与评测闭环</h4>
+                  <h4>Agentic RL：自主取证与长上下文压缩</h4>
                 </div>
                 <p>
-                  面向规则变化和新错误案例，搭建不更新模型参数的判责 Agent。买家、商家举证 Agent 并发读取各自证据，
-                  再由 Merge Agent 汇总结论；职责隔离既减少跨侧干扰，也让错误能够归因到具体一侧或最终汇总环节。
+                  为解决规则、聊天、举证与物流信息一次性塞入上下文造成的注意力分散，将各维度信息封装为工具，
+                  让模型围绕当前证据缺口自主规划调用顺序，并在有限上下文内完成证据获取与最终判责。
                 </p>
                 <ul>
-                  <li>主导三 Agent 架构与 Runtime Skill Loader，按“细粒度问题、买卖家侧、工具或决策阶段”精确加载 Skill；不跨侧注入、不累积无关片段，通过配置切换版本并支持回滚。</li>
-                  <li>记录每轮工具结果、实际加载的 Skill 和决策轨迹，提供 JSON 与 HTML 复盘视图；建立小样本联调、全量评测和错误迁移分析流程，同时跟踪已修复、持续错误与新增退化案例。</li>
-                  <li>在固定 804 条评测集上，无 Skill、Skill v1、Skill v2 的 Accuracy 分别为 78.23%、87.06%、90.30%。两轮累计提升 12.07 个百分点，错误案例由 175 条降至 78 条，买卖家两侧 Precision/Recall 同步提升。</li>
-                  <li>主导 Agent 架构、Skill 加载、轨迹可观测、评测脚本及协作接口，与 Skill 归因/生成侧协同构建可复现、可回滚的能力迭代闭环。</li>
+                  <li>基于 verl、Ray 与 vLLM 搭建多轮 Agentic RL 链路，采用 Step-wise 冷启动教授工具使用和判责步骤，再以 DAPO、GSPO 等算法优化端到端策略。</li>
+                  <li>设计无效工具 Reward，惩罚重复、无关或无法带来新增证据的调用；对非确定性工具预采样 Observation，降低远程调用波动对 Rollout 的干扰。</li>
+                  <li>压缩工具上下文，只保留判责所需的关键字段与证据摘要，减少长上下文噪声；同时保留原始 Observation 引用，支持评测时回放与核验。</li>
+                  <li>模型 Accuracy 提升至 91.3%，Recall 从 85.3% 提升至 89.5%，Coverage 达 100%。</li>
                 </ul>
               </section>
 
               <section class="experience-project">
                 <div class="experience-project-heading">
                   <span>03</span>
-                  <h4>判责 Agentic RL 与主动取证</h4>
+                  <h4>自迭代 Multi-Agent：Evaluation Harness 驱动 Skill 进化</h4>
                 </div>
                 <p>
-                  基于 verl、Ray 与 vLLM 搭建 Qwen3-VL-30B-A3B 的多模态 Agentic RL 链路，
-                  将长上下文静态判定改为“识别证据缺口、按需调用工具、更新状态、输出判责结论”的多轮 ReAct 策略。
+                  将判责链路拆为买家举证 Agent、商家举证 Agent、举证关系 Agent 与判决原因模块。买卖家 Agent 并行判断各自证据有效性，
+                  再由举证关系 Agent 基于双方推理过程和结果给出最终支持方，使错误能够定位到具体子 Agent 与工具后节点。
                 </p>
                 <ul>
-                  <li>接入聊天、售后举证、物流、OCR 和高清看图 5 类工具，显式维护当前判断、关键依据和证据缺口；仅在需要时加载图片，并约束同一证据工具不重复调用。</li>
-                  <li>实现离线工具缓存：4 类非确定性远程工具各采样 3 轮，物流工具本地采样 1 轮；Rollout 从缓存中采样 Observation，减少远程调用耗时与随机失败对训练的干扰。</li>
-                  <li>以最终判责正确性为主要奖励，结合工具调用辅助信号和执行约束，串联 GRPO/DAPO、异步 Rollout、评估与轨迹导出，并完成推理服务和工具服务联调。</li>
-                  <li>在 906 条离线验证样本中正确判责 831 条，Accuracy 为 91.7%；平均工具调用 2.6 轮，通用模型零样本对照为 3.6 轮，在控制调用开销的同时完成主动取证与判责。</li>
-                  <li>完成 906 条 GT 验证、训练链路联调与完整轨迹导出，将该版本沉淀为无 Skill RL 基线及 Dynamic Skill 的可复用训练基座。</li>
+                  <li>构建 Agent Evaluation Harness，将人工标注的分节点结果与完整 Trace 对齐，通过 Trace Replay 精确判断是买家举证、商家举证还是关系判定环节出错。</li>
+                  <li>结合判决原因、子 Agent 推理和工具调用轨迹，按用户问题聚合 Bad Case；Skill 归因模块生成新增、删除与变更建议，Skill 更新模块统一产出可版本化、可回滚的规则经验。</li>
+                  <li>采用多阶段数据桶滚动迭代：先用一个桶高效暴露共性错误，再迁移到新桶检验泛化并继续更新，避免一开始全量推理的高成本，也用跨桶落差显式识别过拟合。</li>
+                  <li>首阶段 Accuracy 从约 60% 提升至 90%+；迁移到下一数据桶保持 80%+，通过连续多桶迭代逐步收敛训练桶与新分布之间的差距。</li>
                 </ul>
               </section>
 
               <section class="experience-project">
                 <div class="experience-project-heading">
                   <span>04</span>
-                  <h4>Dynamic Skill：让模型学习选择经验</h4>
+                  <h4>Dynamic Agentic RL：工具后动态注入 Skill</h4>
                 </div>
                 <p>
-                  在 Agentic RL 基础上，把工具结果后的 Skill 硬注入改为模型可选择的动作：先展示候选经验的简要说明，
-                  再由模型选择加载具体片段或显式跳过，使经验使用成为策略学习的一部分。
+                  在 Agentic RL 基础上，根据每次调用的工具类型动态匹配版本化 Skill，并将其与工具 Observation 一同返回 Agent，
+                  让证据理解、Policy 适配与工具异常处理经验在最相关的决策节点即时生效。
                 </p>
                 <ul>
-                  <li>区分初始固定的规划、最终判断 Skill 与运行时的工具阅读 Skill；设计“工具返回、候选摘要、选择编号、加载正文”的交互流程，每个工具结果只允许选择一次，避免反复加载和上下文膨胀。</li>
-                  <li>主导加载机制、Agent Loop 与训练评估链路改造，处理图片特征与 Token 不匹配、长上下文显存不足、非数值轨迹参与指标聚合等问题，分离可观测数据与数值评测。</li>
-                  <li>在相同 Qwen3-VL-4B 模型与数据口径下，Dynamic Skill 在 50、100 Step 验证节点均优于无 Skill 基线，验证“模型主动选择经验”的机制价值。</li>
-                  <li>将 4B 机制验证推进至 30B 规模训练适配，系统解决 OOM、candidate_count=0、图像特征与 Token 不匹配、验证聚合崩溃等 8 类关键工程问题。</li>
+                  <li>将 Skill 绑定到具体工具与错误类型，只在对应 Observation 返回后注入，避免在初始 Prompt 中堆叠全量规则造成上下文膨胀与互相干扰。</li>
+                  <li>保留工具结果、命中 Skill、后续动作与最终判责的完整 Trace，使动态经验带来的收益能够通过回放与消融被独立验证。</li>
+                  <li>相比无 Skill 版本，模型 Accuracy 提升至 93.2%，Recall 从 89.5% 提升至 90.8%，Coverage 达 100%。</li>
                 </ul>
+              </section>
+
+              <section class="experience-project">
+                <div class="experience-project-heading">
+                  <span>05</span>
+                  <h4>Agentic RL 算法探索</h4>
+                </div>
+                <p>
+                  围绕长轨迹任务中的稀疏终局奖励与信用分配问题，探索 ARPO、Turn-level Reward/Credit Assignment 等训练范式，
+                  对比不同 Group 构造、优势估计与分步奖励设计对工具策略、推理稳定性和最终判责的影响。
+                </p>
               </section>
             </div>
             <div class="inline-tags" aria-label="实习技术关键词">
-              <span>Post-training</span><span>Agentic RL</span><span>Agent System</span><span>Evaluation</span><span>Deployment</span>
+              <span>Post-training</span><span>Critic + Rethink</span><span>Agentic RL</span><span>Multi-Agent</span><span>Evaluation Harness</span>
             </div>
           </div>
         </article>

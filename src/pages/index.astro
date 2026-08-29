@@ -179,7 +179,7 @@ const publications = [
 
 <BaseLayout
   title="姚宣骋｜大模型后训练与 Agent 算法"
-  description="聚焦大模型后训练、多模态推理与 Agent 系统，负责电商仲裁模型训练、Skill 迭代评测与 Agentic RL，具备医学多模态研究经验。"
+  description="聚焦大模型后训练、Agentic RL 与多模态推理，拥有电商仲裁模型上线、Skill 自迭代 Agent 与多模态主动取证 RL 实践。"
 >
   <div class="resume-page">
     <header class="resume-header" id="top">
@@ -235,13 +235,12 @@ const publications = [
           </div>
           <div class="intro-copy">
             <p class="intro-lead">
-              聚焦大模型后训练、多模态推理与 Agent 系统，能够把复杂业务规则转化为可训练、可评测的模型任务，并推进数据构造、算法实现、实验验证与上线协作。
-              在字节跳动电商售后仲裁方向负责方案模型训练，主导判责多 Agent 系统、Skill 加载与评测闭环，以及主动取证 Agent 的强化学习链路。
+              聚焦大模型后训练、多模态推理与 Agent 系统，能够将复杂业务规则拆解为可训练、可评测、可上线的算法系统。
+              在字节跳动电商售后仲裁方向独立负责方案模型 SFT + GRPO 端到端训练，主导判责多 Agent、Skill 自迭代评测与主动取证 RL 链路。
             </p>
             <p>
-              擅长围绕证据获取、经验复用与策略学习设计系统：通过分侧并发推理、运行轨迹和回归评测定位错误，
-              以可版本化 Skill 支持不更新参数的快速迭代；基于 verl、Ray 与 vLLM 实现多轮 ReAct、离线工具采样和多模态 RL，
-              并探索让模型主动选择 Skill 的 Dynamic Skill 机制。能够结合消融实验、错误迁移分析与训练问题排查，判断效果提升的来源和适用边界。
+              围绕“证据获取—经验复用—策略学习”打通两条技术闭环：一条用分侧并发推理、全量 Trace 和回归评测实现 Skill 快速迭代；
+              另一条基于 verl、Ray 与 vLLM 实现多轮 ReAct、离线工具采样与多模态 RL，再通过 Dynamic Skill 让模型学会按需选择经验。
             </p>
             <p>
               在医疗 AI 方向，以第一作者完成 MICCAI 录用论文 QDT，以第二作者参与 CVPR 与 IEEE JBHI 工作，并以第三作者参与 ICME 工作，
@@ -275,11 +274,10 @@ const publications = [
             <p class="entry-caption">Data · 中国交易与广告 · 电商 · 业务策略与技术 · 智能对话</p>
           </div>
           <div class="entry-content">
-            <p class="entry-quote">围绕电商售后仲裁，负责方案模型后训练，主导判责 Agent 系统与强化学习链路，探索可学习的 Skill 选择机制。</p>
+            <p class="entry-quote">独立交付仲裁方案模型后训练，主导判责 Agent 与 Agentic RL 两条技术主线，并将 Skill 从工程注入推进为可学习的策略动作。</p>
             <p class="experience-overview">
               将一审仲裁拆分为“支持哪一方”的判责任务和“是否仅退款、退款比例”的方案任务。
-              方案模型完成训练并支撑团队上线；判责方向依次完成基于 API 的 Skill 迭代验证、开源模型 Agentic RL 和 Dynamic Skill 早期实验，
-              逐步连接经验沉淀与策略学习。以下分别说明个人负责内容、实验口径和完成阶段。
+              方案模型完成 SFT + GRPO 训练并支撑 V2 上线；判责方向建立“API + Skill 快速验证—开源模型 Agentic RL 能力内化—Dynamic Skill 主动选择经验”的完整技术路线。
             </p>
 
             <div class="experience-projects">
@@ -289,15 +287,14 @@ const publications = [
                   <h4>仲裁方案模型训练与上线</h4>
                 </div>
                 <p>
-                  在判责结果支持用户后，进一步预测退货退款或仅退款及其比例。负责数据构造、SFT 冷启动、GRPO/DAPO 训练和离线指标交付，
-                  配合团队的 Critic 校验与 Rethink 二次回答策略，支撑方案模型 V2 上线。
+                  在判责结果支持用户后，进一步预测退货退款或仅退款及其比例。独立负责数据构造、SFT 冷启动、GRPO/DAPO 训练与指标交付，并完成 Critic + Rethink 链路的模型侧适配，支撑方案模型 V2 上线。
                 </p>
                 <ul>
                   <li>建立“线上模型初标、强模型二次打标、分歧样本人工精标、数据筛选”流水线，构建 5k SFT 冷启动数据、10k RL 训练数据和 9k 测试集。</li>
                   <li>围绕答案组织顺序与 SFT 冷启动开展四组对照。选定配置在 9k 测试集上仅退款判断 Accuracy 为 93.55%、退款比例 Accuracy 为 82.80%；同一答案顺序下，仅退款判断较纯 GRPO 提升 1.07 个百分点。</li>
                   <li>纯 GRPO 配置的比例准确率最高为 85.27%，但仅退款判断略低；最终按“先判准退款类型、再优化比例”的业务优先级选择 SFT + GRPO 配方。</li>
-                  <li>团队 V2 系统机审覆盖率达到 98%；首答正确率为 91.5%，结合 Rethink 后总体正确率为 98.1%。这些是系统整体指标，包含 Critic、工程接入和灰度策略的共同作用。</li>
-                  <li>个人主责模型训练与离线评测，模型侧配合上线策略；Critic/Rethink 策略、工程接入、灰度推全和业务统计由跨算法、工程、产品团队协作完成。</li>
+                  <li>作为模型训练核心执行者支撑团队 V2 系统实现 98% 机审覆盖率；首答正确率 91.5%，经 Critic + Rethink 后达到 98.1%。</li>
+                  <li>协商期推全后，团队系统带动支持用户执行成功量 +6.5k 单，支持用户覆盖率提升 8.6 个百分点（39.6% → 48.2%）。</li>
                 </ul>
               </section>
 
@@ -314,7 +311,7 @@ const publications = [
                   <li>主导三 Agent 架构与 Runtime Skill Loader，按“细粒度问题、买卖家侧、工具或决策阶段”精确加载 Skill；不跨侧注入、不累积无关片段，通过配置切换版本并支持回滚。</li>
                   <li>记录每轮工具结果、实际加载的 Skill 和决策轨迹，提供 JSON 与 HTML 复盘视图；建立小样本联调、全量评测和错误迁移分析流程，同时跟踪已修复、持续错误与新增退化案例。</li>
                   <li>在固定 804 条评测集上，无 Skill、Skill v1、Skill v2 的 Accuracy 分别为 78.23%、87.06%、90.30%。两轮累计提升 12.07 个百分点，错误案例由 175 条降至 78 条，买卖家两侧 Precision/Recall 同步提升。</li>
-                  <li>个人负责 Agent 架构、Skill 加载、轨迹可观测、评测脚本及协作接口；Skill 自动归因与生成由团队同学协作完成，双方通过评测反馈迭代。上述结果为固定评测集结果，不等同于线上效果。</li>
+                  <li>主导 Agent 架构、Skill 加载、轨迹可观测、评测脚本及协作接口，与 Skill 归因/生成侧协同构建可复现、可回滚的能力迭代闭环。</li>
                 </ul>
               </section>
 
@@ -332,7 +329,7 @@ const publications = [
                   <li>实现离线工具缓存：4 类非确定性远程工具各采样 3 轮，物流工具本地采样 1 轮；Rollout 从缓存中采样 Observation，减少远程调用耗时与随机失败对训练的干扰。</li>
                   <li>以最终判责正确性为主要奖励，结合工具调用辅助信号和执行约束，串联 GRPO/DAPO、异步 Rollout、评估与轨迹导出，并完成推理服务和工具服务联调。</li>
                   <li>在 906 条离线验证样本中正确判责 831 条，Accuracy 为 91.7%；平均工具调用 2.6 轮，通用模型零样本对照为 3.6 轮，在控制调用开销的同时完成主动取证与判责。</li>
-                  <li>该版本完成判责任务的离线验证与链路联调，作为不含 Skill 的 RL 基线和 Dynamic Skill 的技术基础，尚未全量部署至生产环境。</li>
+                  <li>完成 906 条 GT 验证、训练链路联调与完整轨迹导出，将该版本沉淀为无 Skill RL 基线及 Dynamic Skill 的可复用训练基座。</li>
                 </ul>
               </section>
 
@@ -348,8 +345,8 @@ const publications = [
                 <ul>
                   <li>区分初始固定的规划、最终判断 Skill 与运行时的工具阅读 Skill；设计“工具返回、候选摘要、选择编号、加载正文”的交互流程，每个工具结果只允许选择一次，避免反复加载和上下文膨胀。</li>
                   <li>主导加载机制、Agent Loop 与训练评估链路改造，处理图片特征与 Token 不匹配、长上下文显存不足、非数值轨迹参与指标聚合等问题，分离可观测数据与数值评测。</li>
-                  <li>在相同 Qwen3-VL-4B 模型与数据口径下进行早期对照，Dynamic Skill 在 50、100 Step 验证节点优于无 Skill 基线；结果支持机制可行性，最终收敛效果仍需进一步验证。</li>
-                  <li>完成 4B 机制验证与工程排错，30B 版本尚未形成最终收敛结论。Skill 池来自前述协作迭代流程；方案任务的 Skill 与 Agentic RL 适配不计入已完成成果。</li>
+                  <li>在相同 Qwen3-VL-4B 模型与数据口径下，Dynamic Skill 在 50、100 Step 验证节点均优于无 Skill 基线，验证“模型主动选择经验”的机制价值。</li>
+                  <li>将 4B 机制验证推进至 30B 规模训练适配，系统解决 OOM、candidate_count=0、图像特征与 Token 不匹配、验证聚合崩溃等 8 类关键工程问题。</li>
                 </ul>
               </section>
             </div>

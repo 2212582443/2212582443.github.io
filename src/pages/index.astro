@@ -179,7 +179,7 @@ const publications = [
 
 <BaseLayout
   title="姚宣骋｜大模型后训练与 Agent 算法"
-  description="聚焦大模型后训练与 Agent 系统，拥有 Critic + Rethink、自迭代 Skill Agent、Dynamic Skill Agentic RL 与 ARPO 探索实践。"
+  description="聚焦大模型后训练、Agentic RL 与多模态推理，具备判责模型 Rethink、自迭代 Skill Agent 和多工具 Agentic RL 实践。"
 >
   <div class="resume-page">
     <header class="resume-header" id="top">
@@ -235,12 +235,12 @@ const publications = [
           </div>
           <div class="intro-copy">
             <p class="intro-lead">
-              聚焦大模型后训练、Agentic RL 与多模态推理，擅长把高频变化的业务规则、异构证据和长链路决策转化为可训练、可评测、可迭代的算法系统。
-              在字节跳动电商售后仲裁方向，围绕“AI 替代人工完成纠纷判责与方案决策”，负责判决模型优化与 Agent 系统搭建。
+              上海交通大学计算机科学与技术本硕，聚焦大模型后训练、Agentic RL、Agent 系统与多模态推理。
+              具备从数据构建、训练链路、评测诊断到系统迭代的完整项目经验，关注的不只是单次模型指标，也包括工具稳定性、错误定位效率和规则长期维护成本。
             </p>
             <p>
-              工作沿三条主线并行推进：以 Critic + Rethink 和端到端 SFT + GRPO 提升判责与方案模型能力；以 Multi-Agent、Evaluation Harness 和 Trace Replay
-              搭建评测驱动的 Skill 自迭代闭环；再将长上下文判定重构为主动取证的 Agentic RL，从 No-Skill 演进至 Dynamic Skill，并探索面向多轮信用分配的 ARPO。
+              在字节跳动电商售后仲裁方向，负责判责模型 Rethink 升级、自迭代 Skill Agent 系统和多工具 Agentic RL 训练。
+              将复杂业务规则、买卖双方举证与多模态信息转化为可训练、可评测、可持续优化的决策流程，并通过清晰的评测口径验证每次迭代是否真正解决问题。
             </p>
             <p>
               在医疗 AI 方向，以第一作者完成 MICCAI 录用论文 QDT，以第二作者参与 CVPR 与 IEEE JBHI 工作，并以第三作者参与 ICME 工作，
@@ -274,63 +274,62 @@ const publications = [
             <p class="entry-caption">电商 · 服务体验 · 智能对话</p>
           </div>
           <div class="entry-content">
-            <p class="entry-quote">围绕 AI 替代人工完成纠纷判责与方案决策，推进判决模型优化、自迭代 Skill Agent 与 Agentic RL 三条主线；最终 Agentic RL Accuracy 达 93.2%、Recall 达 90.8%。</p>
+            <p class="entry-quote">围绕 AI 完成售后纠纷判责，推进 Rethink 判责、自迭代 Skill 与 Agentic RL 三条主线；从静态阈值筛选逐步演进为能够主动取证、按需读取规则的判责系统。</p>
             <p class="experience-overview">
-              用户与商家发生纠纷且协商无果后，平台需要依据双方举证要求、证据有效性与证据关系规则判定支持方，再生成退货退款、仅退款及退款比例等裁决方案。
-              这不是单次分类问题：模型既要在准确率约束下扩大可决策范围，也要在长上下文、多模态证据和频繁变化的 Policy 中自主找到足够证据，并让每次错误都能被定位和转化为下一轮系统能力。
+              用户与商家协商无果后，平台需要根据 Policy、双方举证和证据关系判断支持方。案件输入包含聊天、图片或视频举证、物流与商品信息，规则又会随业务变化持续调整。
+              因此，工作的重点不只是训练一个分类模型，而是让系统在准确率约束下扩大可处理范围、从长上下文中找到有效证据，并把评测中发现的错误沉淀为下一轮可复用的规则能力。
             </p>
 
             <div class="experience-projects">
               <section class="experience-project">
                 <div class="experience-project-heading">
                   <span>01</span>
-                  <h4>判决模型训练与优化：Critic + Rethink 到端到端 SFT + GRPO</h4>
+                  <h4>判责模型：从阈值筛选升级为 Rethink 自纠错</h4>
                 </div>
                 <p>
-                  原有方案以 Reward Model 对豆包首轮推理结果打分并卡阈值，只能选择性采纳高置信结果，阈值以下 Case 无法继续处理。为在 90% Accuracy 约束下扩大召回，
-                  将静态过滤升级为“生成—Critic 校验—错误反馈—Rethink—二次校验”的双轮自纠错链路。
+                  原方案由 Reward Model 对基座模型的推理结果打分，达到阈值才采纳。这种方式能够筛出高置信结果，但阈值以下的案件无法继续处理，召回率和可处理范围受到限制。
+                  为此，将静态筛选升级为“生成—Critic 校验—错误反馈—Rethink—二次校验”的两轮流程。
                 </p>
                 <ul>
-                  <li>Critic 首轮判错时不直接反转：由于 Critic 对“错误”样本的判断精度低于对“正确”样本的判断精度，直接反转会把大量校验噪声放大；增加 Rethink 后，二次判错的规模显著缩小，再执行反转可控制对整体准确率的负贡献。</li>
-                  <li>以人工标注与基座多次采样构建正负均衡的推理轨迹，先用 SFT 冷启动稳定 Critic 的思考与判定格式，再以 GRPO/DAPO 训练；随后回放 Critic 认为错误的轨迹，补充带错误反馈的 Rethink 分布并继续迭代。</li>
-                  <li>在 90% Accuracy 约束下，Recall 从 78.2% 提升至 85.3%，Coverage 达 100%，把“低于阈值不处理”升级为“校验、纠错后完成决策”。</li>
-                  <li>在同一判决链路上进一步训练退款方案模型，通过“线上模型初标—强模型二次标—差异样本人工精标”聚焦高价值样本，完成 SFT 冷启动、GRPO 强化及答案前置/后置的 Prompt 格式消融；仅退款 Accuracy 达 93.55%，退款比例 Accuracy 达 82.80%。</li>
+                  <li>Critic 首轮判错时不直接反转，而是先输出错误原因，引导基座模型重新推理。原因在于 Critic 对“错误结果”的判断并非完全可靠，直接反转会把误判放大；增加 Rethink 后，需要反转的结果更少，对整体准确率的影响更可控。</li>
+                  <li>训练时先用 SFT 让 Critic 稳定输出判断和原因，再以基座模型多次采样构造正负均衡的推理轨迹进行 RL。首轮训练完成后，回放真实错误轨迹并生成 Rethink 样本继续训练，使数据分布贴近系统实际运行过程。</li>
+                  <li>在 90% 准确率约束下，召回率从 78.2% 提升至 85.3%，覆盖率达到 100%；Rethink 后 Critic 的判定准确率较直接使用基座模型采样的 Rethink 数据提升约 15%。</li>
                 </ul>
               </section>
 
               <section class="experience-project">
                 <div class="experience-project-heading">
                   <span>02</span>
-                  <h4>自迭代 Skill Agent：让评测结果直接驱动能力升级</h4>
+                  <h4>自迭代 Skill Agent：把错误定位转化为规则更新</h4>
                 </div>
                 <p>
-                  单 Agent 同时理解买卖双方证据时容易出现信息串扰，也难以判断错误究竟来自哪一侧证据理解。为此将系统拆为买家举证 Agent、商家举证 Agent 与举证关系 Agent：
-                  前两者并行判断各方举证是否有效，关系 Agent 接收两侧推理轨迹与结论后完成最终判定。
+                  判责规则变化频繁，如果仍由人工逐条阅读错误样本并修改 Prompt，迭代速度和可复现性都很差。
+                  系统首先将流程拆为买家举证 Agent、商家举证 Agent 和举证关系 Agent：前两者并行判断各方举证是否有效，关系 Agent 根据两侧结果完成最终判定。
                 </p>
                 <ul>
-                  <li>构建 Agent Evaluation Harness 与 Trace Replay，将人工标注与完整运行轨迹对齐，精确定位“哪个子 Agent 在调用哪个工具之后做错了什么”，把系统级 Bad Case 还原为可操作的局部错误节点。</li>
-                  <li>搭建“Bad Case 聚合—Skill 归因—Skill 增删改—版本化验证”的自迭代闭环；采用分桶迭代，先在小批量样本上快速解决共性错误，再依次处理新分布与长尾，观察跨桶迁移以抑制对单批数据的过拟合。</li>
-                  <li>Accuracy 从 78.23% 提升至 90.30%，Bad Case 降低 55.4%；同时实现工具 Observation 离线预采样与缓存查询，将远程工具的不稳定调用移出 RL 主循环，训练耗时降至原方案的 49%。</li>
+                  <li>构建 Agent Evaluation Harness，将人工标注和完整运行轨迹对齐；通过 Trace Replay 定位具体是哪个子 Agent、在哪个工具调用之后出现错误，使系统级错误能够落实为可修改的局部问题。</li>
+                  <li>按问题聚合错误样本，由 Skill 归因模块提出新增、删除或修改建议，再以版本化评测验证更新效果。整个流程不需要重新训练模型，规则变化后可以更快迭代，也能回溯每次修改带来的影响。</li>
+                  <li>采用分桶评测：先解决高频共性错误，再逐步处理新分布和长尾问题，并用跨桶表现检查是否过拟合。准确率从 78.23% 提升至 90.30%，错误样本减少 55.4%。</li>
                 </ul>
               </section>
 
               <section class="experience-project">
                 <div class="experience-project-heading">
                   <span>03</span>
-                  <h4>Agentic RL：No-Skill 到 Dynamic Skill，再到 ARPO</h4>
+                  <h4>Agentic RL：主动取证、动态读取规则与长程决策优化</h4>
                 </div>
                 <p>
-                  针对长上下文一次性输入造成的注意力分散，将判责重构为“Policy 驱动的主动取证 + 判责联合优化”：模型不再被动阅读全部材料，而是根据当前证据缺口自主决定调用什么工具、何时停止取证以及最终支持哪一方。
+                  将全部规则和证据一次性输入模型，会产生很长的上下文，其中大量信息与当前案件无关。为此把判责重构为主动取证过程：模型根据当前证据缺口决定调用什么工具、按什么顺序取证、何时结束并给出结论。
                 </p>
                 <ul>
-                  <li><strong>No-Skill：</strong>将聊天、售后举证、物流、OCR 与高清图片封装为 5 类核心工具，基于 verl、Ray 与 vLLM 实现多轮 ReAct 训练；以 Step-wise SFT 冷启动教授取证范式，再用 DAPO/GSPO 优化完整轨迹，并以无效工具惩罚、格式正确性等辅助 Reward 约束调用行为。Accuracy 达 91.3%，Recall 达 89.5%。</li>
-                  <li><strong>Dynamic Skill：</strong>全量规则注入会重新制造上下文冗余，因此在每次工具返回后，仅提供与案件标签、证据侧及工具类型相关的 Skill 候选概要，由模型通过专用 Skill 加载工具自主选择是否阅读具体规则，把“规则选择”本身纳入 RL 轨迹。Accuracy 提升至 93.2%，Recall 提升至 90.8%。</li>
-                  <li><strong>ARPO 探索：</strong>轨迹级 RL 对整条多轮交互只给出粗粒度反馈，在错误分支后的大量 token 上浪费探索预算。当前围绕 token 熵定位高不确定性节点，自适应增加局部分支采样，并结合分层奖励与共享前缀优势分配，探索更精细的多轮信用分配。</li>
+                  <li><strong>主动取证：</strong>将聊天、图片或视频举证、物流、商品与直播信息封装为工具。先用 step-wise SFT 教会模型基本调用路径，再用 RL 优化完整轨迹；通过无效调用惩罚、工具结果预采样和上下文压缩减少随机性与无关信息。准确率达到 91.3%，召回率由 85.3% 提升至 89.5%。</li>
+                  <li><strong>动态 Skill：</strong>如果把全部规则一次性加入 Prompt，会再次造成上下文冗余。因此在工具返回结果后，只提供与当前案件和证据类型相关的 Skill 概要，由模型自主选择需要读取的具体规则。准确率由 91.3% 提升至 93.2%，召回率由 89.5% 提升至 90.8%。</li>
+                  <li><strong>长程决策优化：</strong>只在轨迹末端给出 Reward 时，模型很难判断中间哪一步导致最终错误。进一步探索 turn-level credit assignment 与 ARPO：根据 token 熵找到高不确定性的决策节点，在这些位置增加分支采样并进行优势归因；ARPO 在动态 Skill 版本基础上将准确率提升至 93.9%。</li>
                 </ul>
               </section>
             </div>
             <div class="inline-tags" aria-label="实习技术关键词">
-              <span>SFT · GRPO/DAPO/GSPO</span><span>Critic + Rethink</span><span>Evaluation Harness · Trace Replay</span><span>Dynamic Skill</span><span>ARPO</span>
+              <span>Critic · Rethink</span><span>Skill 自迭代</span><span>Agent Evaluation</span><span>Agentic RL</span><span>ARPO</span>
             </div>
           </div>
         </article>

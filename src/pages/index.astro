@@ -24,6 +24,8 @@ type ResearchItem = {
   venue: string;
   caption: string;
   brief: string;
+  highlights: string[];
+  id: string;
   role: string;
   details: Array<{ label: string; content: string }>;
   tags: string[];
@@ -35,9 +37,11 @@ type ResearchItem = {
 const research: ResearchItem[] = [
   {
     title: "QDT",
+    id: "qdt",
     venue: "MICCAI 2026",
-    caption: "第一作者 · 已录用",
-    brief: "将医学图像预测拆解为按临床规则串联的二元问题，使最终类别由可审计的问答路径确定，同时用知识蒸馏补偿逻辑约束带来的性能损失。",
+    caption: "第一作者 · 已发表",
+    brief: "让分类模型给出可以逐步核验的判断依据：把医学诊断拆成连续的二元问题，以确定性逻辑树生成结论，再用多层知识蒸馏保留模型的识别能力。",
+    highlights: ["ISIC-2019 准确率 84.18%", "Macro-F1 +5.21 个百分点", "3 套数据集 · 4 类骨干"],
     role: "第一作者；完成从问题定义、方法实现到三套数据集实验与论文写作的完整研究",
     image: qdtLogicTree,
     imageAlt: "QDT 在压疮分期任务中的问题驱动决策树与可视化推理路径",
@@ -48,11 +52,11 @@ const research: ResearchItem[] = [
       },
       {
         label: "方法设计",
-        content: "QDT 使用临床定义的子问题、注意力特征融合和确定性逻辑树生成诊断路径；训练时先获得高容量教师模型，再从主任务与子任务输出分布、空间注意力两个层面向逻辑约束学生模型蒸馏。",
+        content: "把临床诊断标准转换为有先后关系的二元子问题，由子任务预测和确定性逻辑树共同决定类别，而非事后生成一段解释。先训练高容量教师，再对主任务分布、子问题分布与空间注意力进行蒸馏，让学生在遵守逻辑结构的同时学习教师的视觉判别能力；推理时只需输入图像，无需人工回答子问题。",
       },
       {
         label: "数据与验证",
-        content: "在 2,292 张压疮图像、25,331 张 ISIC-2019 图像和 5,240 张 MILK10k 图像上验证，覆盖 6、8、10 类诊断任务，并在 ResNet、VGG、DenseNet 和 ViT 等骨干上检验通用性。",
+        content: "在压疮分期、ISIC-2019 与 MILK10k 三套数据集上验证，覆盖 6、8、10 类任务。通过 ResNet、VGG、DenseNet、ViT 多骨干实验，以及子任务监督、注意力融合和蒸馏消融，检验收益是否依赖特定架构。",
       },
       {
         label: "量化结果",
@@ -60,12 +64,15 @@ const research: ResearchItem[] = [
       },
     ],
     tags: ["Decision Tree", "Distillation", "Medical AI"],
+    links: [{ label: "Springer 正式论文", href: "https://link.springer.com/chapter/10.1007/978-3-032-38079-1_43" }],
   },
   {
     title: "EMAD",
+    id: "emad",
     venue: "CVPR 2026",
     caption: "第二作者 · 已录用",
-    brief: "为阿尔茨海默病生成结构化诊断报告，并把报告句子逐级关联到临床证据字段和 3D 脑区，使诊断结论具备可检查的证据链。",
+    brief: "把多模态报告中的每个判断连接到具体证据：联合 3D MRI 与临床信息生成诊断报告，进一步定位支持结论的临床字段和解剖区域，并用可验证奖励提升报告一致性。",
+    highlights: ["CN/CI 准确率 93.33%", "证据检索 R@3 0.84", "脑区定位 Dice 0.76 → 0.82"],
     role: "第二作者；参与证据驱动的 3D 医学多模态诊断、Grounding 与可验证强化学习研究",
     image: emadFramework,
     imageAlt: "EMAD 证据驱动多模态诊断框架图",
@@ -76,7 +83,7 @@ const research: ResearchItem[] = [
       },
       {
         label: "方法设计",
-        content: "提出 Sentence-Evidence-Anatomy 分层 Grounding，将报告句子先检索到临床证据，再以证据为条件定位 3D MRI 脑区；GTX-Distill 用少量密集标注教师向生成报告上的学生迁移 Grounding，Executable-Rule GRPO 则约束格式、NIA-AA 一致性和推理-诊断蕴含关系。",
+        content: "采用 Sentence-Evidence-Anatomy 分层定位：先将报告句子对应到临床证据，再以证据为条件定位 3D MRI 脑区。通过 GTX-Distill，把少量密集标注训练出的教师定位能力迁移到生成报告的学生模型；再以 GRPO 联合优化报告格式、NIA-AA 指南一致性和推理与诊断的逻辑一致性。",
       },
       {
         label: "数据与任务",
@@ -92,9 +99,11 @@ const research: ResearchItem[] = [
   },
   {
     title: "Med3DInsight",
+    id: "med3dinsight",
     venue: "IEEE JBHI · 2026",
     caption: "第二作者 · 已发表",
-    brief: "利用 2D 多模态大模型生成的切片语义监督预训练 3D 医学图像编码器，同时保留疾病语义和精细解剖结构，服务分割与分类任务。",
+    brief: "在缺少 3D 图文标注的条件下，把 2D 多模态大模型的语义知识迁移到 3D 编码器；通过空间位置建模与可靠样本对齐，兼顾疾病语义和分割所需的结构细节。",
+    highlights: ["8 个分割数据集 · 2 个分类任务", "平均 Dice 提升超过 1 个百分点", "平均 HD95 降低 0.7 mm"],
     role: "第二作者；参与 2D 多模态知识向 3D 医学视觉表征迁移的框架研究与实验验证",
     image: med3dFramework,
     imageAlt: "Med3DInsight 三维医学图像预训练框架图",
@@ -105,7 +114,7 @@ const research: ResearchItem[] = [
       },
       {
         label: "方法设计",
-        content: "Plane-Slice-Aware Transformer 通过可学习查询与平面-切片位置编码连接 3D 体特征和 2D 图文空间；mini-batch Partial Optimal Transport 只匹配可靠的跨模态内容，体数据重建分支保留低层结构细节。",
+        content: "Plane-Slice Attention Transformer 通过可学习查询和平面／切片位置编码，将 3D 体特征对齐到 2D 图文空间。针对自动描述中的噪声，采用 mini-batch Partial Optimal Transport 选择可靠的跨模态匹配；同时保留体数据重建任务，避免语义对齐损害精细解剖信息。",
       },
       {
         label: "实验范围",
@@ -121,9 +130,11 @@ const research: ResearchItem[] = [
   },
   {
     title: "AD-Reasoning",
+    id: "ad-reasoning",
     venue: "ICME 2026",
     caption: "第三作者",
-    brief: "联合结构 MRI 与六类临床信息生成阿尔茨海默病分期理由，使用 NIA-AA 规则和可验证奖励约束证据覆盖、输出结构与最终诊断。",
+    brief: "把临床指南转成模型可学习的训练信号：融合 3D MRI 与六类临床信息，通过预训练、SFT 和 GRPO，让诊断输出同时包含依据、结论与置信度。",
+    highlights: ["CN/MCI 准确率 92.82%", "影像 + 6 类临床信息", "PT → SFT → GRPO"],
     role: "第三作者；参与多模态临床推理数据、指南约束与强化学习后训练研究",
     image: adReasoningFramework,
     imageAlt: "AD-Reasoning 多模态指南推理框架图",
@@ -154,7 +165,8 @@ const publications = [
   {
     venue: "MICCAI 2026",
     title: "Question-Driven Decision Tree via Knowledge Distillation for Interpretable Prediction",
-    role: "第一作者 · 已录用",
+    role: "第一作者 · 已发表",
+    href: "https://link.springer.com/chapter/10.1007/978-3-032-38079-1_43",
   },
   {
     venue: "CVPR 2026",
@@ -178,8 +190,8 @@ const publications = [
 ---
 
 <BaseLayout
-  title="姚宣骋｜大模型后训练与 Agent 算法"
-  description="聚焦大模型后训练、Agentic RL 与多模态推理，具备判责模型 Rethink、自迭代 Skill Agent 和多工具 Agentic RL 实践。"
+  title="姚宣骋｜大模型后训练、Agent 与多模态算法"
+  description="上海交通大学计算机本硕，2027 届。字节跳动算法实习，覆盖大模型后训练、Agentic RL、Agent 自迭代与训练评测工程；MICCAI 第一作者，CVPR、IEEE JBHI 与 ICME 科研成果。"
 >
   <div class="resume-page">
     <header class="resume-header" id="top">
@@ -188,7 +200,7 @@ const publications = [
         <h1>姚宣骋</h1>
         <p class="header-name-en">XUANCHENG YAO</p>
         <p class="header-title">上海交通大学 · 计算机科学与技术硕士 · 2027 届</p>
-        <p class="header-focus">大模型后训练 / Agentic RL / Agent 系统 / 模型评测</p>
+        <p class="header-focus">大模型后训练 / Agent 与强化学习 / 多模态算法</p>
       </div>
 
       <div class="header-contact" aria-label="联系方式">
@@ -235,30 +247,54 @@ const publications = [
           </div>
           <div class="intro-copy">
             <p class="intro-lead">
-              上海交通大学计算机科学与技术本硕，聚焦大模型后训练、Agentic RL、Agent 系统与多模态推理。
-              具备从数据构建、训练链路、评测诊断到系统迭代的完整项目经验，关注的不只是单次模型指标，也包括工具稳定性、错误定位效率和规则长期维护成本。
+              上海交通大学计算机科学与技术本硕，2027 届。<strong>兼具大模型后训练、Agent 系统建设与多模态科研经验</strong>，
+              能从业务问题出发，完成数据构建、训练优化、实验评测和系统迭代。
             </p>
             <p>
-              在字节跳动电商售后仲裁方向，负责判责模型 Rethink 升级、自迭代 Skill Agent 系统和多工具 Agentic RL 训练。
-              将复杂业务规则、买卖双方举证与多模态信息转化为可训练、可评测、可持续优化的决策流程，并通过清晰的评测口径验证每次迭代是否真正解决问题。
+              在字节跳动电商售后仲裁团队，负责 Critic + Rethink、自迭代 Skill Agent 与 Agentic RL 相关工作。
+              既优化模型如何判断，也搭建工具取证、错误回放和规则更新链路，使系统能够持续解决复杂案件。
             </p>
             <p>
-              在医疗 AI 方向，以第一作者完成 MICCAI 录用论文 QDT，以第二作者参与 CVPR 与 IEEE JBHI 工作，并以第三作者参与 ICME 工作，
-              覆盖可解释决策树、3D 视觉语言预训练、证据 Grounding 和 RLVR。技术工作强调训练闭环、评测口径和可解释证据链，适合大模型算法、Agent 算法与多模态算法岗位。
+              科研成果覆盖 <strong>MICCAI 第一作者、CVPR 与 IEEE JBHI 第二作者、ICME 第三作者</strong>，
+              研究涉及知识蒸馏、3D 视觉语言预训练、证据定位与可验证强化学习。擅长把研究方法落到具体问题上：提高推理质量、减少无效探索、定位错误原因，并用对照实验检验改进。
             </p>
             <div class="keyword-list" aria-label="核心技术方向">
               <span>大模型后训练</span>
               <span>Agentic RL</span>
               <span>Agent 系统</span>
-              <span>模型评测</span>
-              <span>可信医疗 AI</span>
+              <span>多模态 / 3D 视觉</span>
+              <span>机器学习研究</span>
             </div>
             <div class="intro-meta">
-              <span><BriefcaseBusiness size={16} /> 求职方向：AI 算法 / 应用研发</span>
+              <span><BriefcaseBusiness size={16} /> 2027 届 · 算法研发 / 机器学习研究</span>
               <span><MapPin size={16} /> 上海 / 杭州</span>
             </div>
           </div>
         </div>
+        <div class="profile-evidence" aria-label="代表成果">
+          <a href="#agentic-rl">
+            <span class="evidence-label">大模型后训练 · Agentic RL</span>
+            <strong>93.2<small>%</small></strong>
+            <span>动态 Skill 判责准确率 · 召回率 90.8%</span>
+          </a>
+          <a href="#skill-agent">
+            <span class="evidence-label">Agent 自迭代 · 无需参数重训</span>
+            <strong>+12.07<small> 个百分点</small></strong>
+            <span>准确率 78.23% → 90.30% · 错误减少 55.4%</span>
+          </a>
+          <a href="#research-title">
+            <span class="evidence-label">多模态研究 · 可解释推理</span>
+            <strong>4<small> 项科研成果</small></strong>
+            <span>MICCAI 一作 · CVPR / JBHI / ICME</span>
+          </a>
+        </div>
+        <nav class="direction-links" aria-label="按技术方向浏览">
+          <span>按方向了解</span>
+          <a href="#rethink">后训练与强化学习 <ArrowUpRight size={13} /></a>
+          <a href="#skill-agent">Agent 算法与系统 <ArrowUpRight size={13} /></a>
+          <a href="#research-title">多模态与视觉语言 <ArrowUpRight size={13} /></a>
+          <a href="#skills-title">研究与工程能力 <ArrowUpRight size={13} /></a>
+        </nav>
       </section>
 
       <section class="resume-section" aria-labelledby="experience-title">
@@ -274,62 +310,81 @@ const publications = [
             <p class="entry-caption">电商 · 服务体验 · 智能对话</p>
           </div>
           <div class="entry-content">
-            <p class="entry-quote">围绕 AI 完成售后纠纷判责，推进 Rethink 判责、自迭代 Skill 与 Agentic RL 三条主线；从静态阈值筛选逐步演进为能够主动取证、按需读取规则的判责系统。</p>
+            <p class="entry-quote">围绕电商售后纠纷判责，负责模型后训练、Agent 自迭代与 Agentic RL 相关模块，打通“推理纠错—规则迭代—主动取证”的优化路径。</p>
             <p class="experience-overview">
-              用户与商家协商无果后，平台需要根据 Policy、双方举证和证据关系判断支持方。案件输入包含聊天、图片或视频举证、物流与商品信息，规则又会随业务变化持续调整。
-              因此，工作的重点不只是训练一个分类模型，而是让系统在准确率约束下扩大可处理范围、从长上下文中找到有效证据，并把评测中发现的错误沉淀为下一轮可复用的规则能力。
+              买卖双方协商失败后，平台需要结合业务规则、双方举证及证据关系判断支持方。困难在于证据来源多、规则更新频繁，而且错误可能发生在取证、理解规则或最终决策中的任一步。
+              我围绕三个相互衔接的问题开展工作：低置信案件如何继续处理、规则变化如何快速适配，以及模型如何自主选择证据并学会多轮决策。
             </p>
 
             <div class="experience-projects">
-              <section class="experience-project">
+              <section class="experience-project" id="rethink">
                 <div class="experience-project-heading">
                   <span>01</span>
-                  <h4>判责模型：从阈值筛选升级为 Rethink 自纠错</h4>
+                  <h4>判责模型后训练：用 Critic + Rethink 突破阈值筛选的召回限制</h4>
                 </div>
                 <p>
-                  原方案由 Reward Model 对基座模型的推理结果打分，达到阈值才采纳。这种方式能够筛出高置信结果，但阈值以下的案件无法继续处理，召回率和可处理范围受到限制。
-                  为此，将静态筛选升级为“生成—Critic 校验—错误反馈—Rethink—二次校验”的两轮流程。
+                  原方案用 Reward Model 打分并按阈值采纳结果，低置信案件缺少后续处理路径。我将其升级为两轮推理：基座模型先生成结论，Critic 判断对错并指出原因，再引导模型重新检查证据和规则，完成二次校验。
                 </p>
+                <div class="result-line"><strong>召回率 78.2% → 85.3%</strong><span>90% 准确率约束 · 覆盖率 100%</span></div>
                 <ul>
-                  <li>Critic 首轮判错时不直接反转，而是先输出错误原因，引导基座模型重新推理。原因在于 Critic 对“错误结果”的判断并非完全可靠，直接反转会把误判放大；增加 Rethink 后，需要反转的结果更少，对整体准确率的影响更可控。</li>
-                  <li>训练时先用 SFT 让 Critic 稳定输出判断和原因，再以基座模型多次采样构造正负均衡的推理轨迹进行 RL。首轮训练完成后，回放真实错误轨迹并生成 Rethink 样本继续训练，使数据分布贴近系统实际运行过程。</li>
-                  <li>在 90% 准确率约束下，召回率从 78.2% 提升至 85.3%，覆盖率达到 100%；Rethink 后 Critic 的判定准确率较直接使用基座模型采样的 Rethink 数据提升约 15%。</li>
+                  <li><strong>纠错路径设计：</strong>分析 Critic 不同判断分支的可靠性，首轮判错后先反馈原因、触发 Rethink，而非立即反转结果；仅在二轮校验后处理剩余错误，减少误判传播，在准确率要求下扩大可处理范围。</li>
+                  <li><strong>数据与训练闭环：</strong>通过人工精标、多次采样与难例补齐构造正负均衡轨迹；SFT 冷启动稳定判断和原因的输出，再用 GRPO / DAPO 优化判别能力。回放首轮错误并补充 Rethink 后的轨迹，进行第二阶段训练，覆盖真实链路中的分布变化。</li>
                 </ul>
+                <details class="entry-more">
+                  <summary><span>展开：为什么需要两轮推理与数据回灌</span><span class="details-mark">+</span></summary>
+                  <div class="entry-more-content">
+                    <p>Critic 的价值在于给出可执行的错误反馈，例如遗漏哪项证据、误用了哪条规则、举证关系在哪一步判断反了。第一轮采样只能覆盖初始回答，Rethink 会产生新的推理分布；用实际链路生成的二轮样本继续训练，才能让 Critic 同时适应首轮判别和纠错后的复核。</p>
+                  </div>
+                </details>
               </section>
 
-              <section class="experience-project">
+              <section class="experience-project" id="skill-agent">
                 <div class="experience-project-heading">
                   <span>02</span>
-                  <h4>自迭代 Skill Agent：把错误定位转化为规则更新</h4>
+                  <h4>自迭代 Skill Agent：把错误轨迹转成可复用、可验证的规则</h4>
                 </div>
                 <p>
-                  判责规则变化频繁，如果仍由人工逐条阅读错误样本并修改 Prompt，迭代速度和可复现性都很差。
-                  系统首先将流程拆为买家举证 Agent、商家举证 Agent 和举证关系 Agent：前两者并行判断各方举证是否有效，关系 Agent 根据两侧结果完成最终判定。
+                  业务规则频繁变化，逐案分析错误、修改长 Prompt 难以持续。我搭建多 Agent 评测与 Skill 更新系统，将买家举证、商家举证、举证关系及判决解释分开处理，使最终错误能够追溯到具体判断步骤，并转化为局部规则更新。
                 </p>
+                <div class="result-line"><strong>准确率 78.23% → 90.30%</strong><span>独立评测 · 错误样本减少 55.4%</span></div>
                 <ul>
-                  <li>构建 Agent Evaluation Harness，将人工标注和完整运行轨迹对齐；通过 Trace Replay 定位具体是哪个子 Agent、在哪个工具调用之后出现错误，使系统级错误能够落实为可修改的局部问题。</li>
-                  <li>按问题聚合错误样本，由 Skill 归因模块提出新增、删除或修改建议，再以版本化评测验证更新效果。整个流程不需要重新训练模型，规则变化后可以更快迭代，也能回溯每次修改带来的影响。</li>
-                  <li>采用分桶评测：先解决高频共性错误，再逐步处理新分布和长尾问题，并用跨桶表现检查是否过拟合。准确率从 78.23% 提升至 90.30%，错误样本减少 55.4%。</li>
+                  <li><strong>可诊断的协作架构：</strong>买家与商家举证 Agent 并行判断有效性，举证关系 Agent 汇总决策。构建 Evaluation Harness，将阶段标注与运行轨迹对齐，通过 Trace Replay 找到出错的子 Agent、工具节点及证据解读环节。</li>
+                  <li><strong>自动归因与更新：</strong>按用户问题聚合错误轨迹，生成 Skill 新增、删除、修改建议；将证据理解、规则适配和工具异常处理沉淀为版本化 Skill，在不重新训练模型参数的情况下迭代能力。</li>
+                  <li><strong>泛化验证与复用：</strong>采用分桶滚动迭代，先修复高频共性错误，再用新桶检验过拟合、补充长尾规则，并保留独立评测。产出的 Skill 库进一步用于 Agentic RL 的动态规则加载，连接规则优化与策略训练。</li>
                 </ul>
+                <details class="entry-more">
+                  <summary><span>展开：如何避免 Skill 变成错误样本记忆</span><span class="details-mark">+</span></summary>
+                  <div class="entry-more-content">
+                    <p>Skill 按问题类型、适用工具及买卖方角色组织，描述规则的适用条件、有效与无效边界，而非保存某个案件答案。每次修改保留版本差异与回归结果；通过新桶表现检查是否只在当前数据上有效，再用未参与规则生成的独立数据评估最终效果。</p>
+                  </div>
+                </details>
               </section>
 
-              <section class="experience-project">
+              <section class="experience-project" id="agentic-rl">
                 <div class="experience-project-heading">
                   <span>03</span>
-                  <h4>Agentic RL：主动取证、动态读取规则与长程决策优化</h4>
+                  <h4>Agentic RL：联合学习工具取证、按需读规则与最终判责</h4>
                 </div>
                 <p>
-                  将全部规则和证据一次性输入模型，会产生很长的上下文，其中大量信息与当前案件无关。为此把判责重构为主动取证过程：模型根据当前证据缺口决定调用什么工具、按什么顺序取证、何时结束并给出结论。
+                  全量证据和规则一次性输入容易分散模型注意力。我基于 verl 重构多工具 Agent 训练链路，将判责改为主动取证：模型根据证据缺口选择工具、读取相关规则，再决定继续取证还是输出结论，以强化学习优化完整决策过程。
                 </p>
+                <div class="result-line"><strong>准确率 93.2% · 召回率 90.8%</strong><span>动态 Skill 版本 · 训练耗时降至原来的 49%</span></div>
                 <ul>
-                  <li><strong>主动取证：</strong>将聊天、图片或视频举证、物流、商品与直播信息封装为工具。先用 step-wise SFT 教会模型基本调用路径，再用 RL 优化完整轨迹；通过无效调用惩罚、工具结果预采样和上下文压缩减少随机性与无关信息。准确率达到 91.3%，召回率由 85.3% 提升至 89.5%。</li>
-                  <li><strong>动态 Skill：</strong>如果把全部规则一次性加入 Prompt，会再次造成上下文冗余。因此在工具返回结果后，只提供与当前案件和证据类型相关的 Skill 概要，由模型自主选择需要读取的具体规则。准确率由 91.3% 提升至 93.2%，召回率由 89.5% 提升至 90.8%。</li>
-                  <li><strong>长程决策优化：</strong>只在轨迹末端给出 Reward 时，模型很难判断中间哪一步导致最终错误。进一步探索 turn-level credit assignment 与 ARPO：根据 token 熵找到高不确定性的决策节点，在这些位置增加分支采样并进行优势归因；ARPO 在动态 Skill 版本基础上将准确率提升至 93.9%。</li>
+                  <li><strong>工具策略与奖励设计：</strong>将聊天、售后、图像／OCR、物流等证据能力封装为工具；以 step-wise SFT 学习基本调用路径，再用 DAPO / GSPO 优化多轮轨迹。联合考虑格式、工具使用与最终答案，惩罚无效和重复调用，并压缩与当前问题无关的上下文。No-Skill 版本准确率达到 91.3%，召回率由 85.3% 提升至 89.5%。</li>
+                  <li><strong>训练效率与可复现性：</strong>搭建工具 Observation 离线预采样和一致性过滤流程，将 rollout 中重复的在线请求替换为缓存查询，降低远程调用失败与返回波动对训练的干扰，训练耗时降至原来的 49%。</li>
+                  <li><strong>动态规则加载：</strong>按“案件标签—工具类型—买卖方”检索候选 Skill，在工具返回后提供概要，由模型调用专用加载工具选择正文或跳过。让规则读取成为可学习的动作，减少长规则干扰；Dynamic Skill 版本准确率提升至 93.2%，召回率提升至 90.8%。</li>
                 </ul>
+                <details class="entry-more">
+                  <summary><span>展开：训练链路、工具缓存与长程探索</span><span class="details-mark">+</span></summary>
+                  <div class="entry-more-content">
+                    <p>训练链路围绕 Agent Loop、工具环境、奖励计算与评测分别验证。远程工具多轮预采样后合并过滤，本地确定性工具直接执行，按案件聚合可复用 Observation；评测同时检查最终答案和调用行为，避免模型通过多调工具或无效加载 Skill 获取奖励。</p>
+                    <p>进一步探索 ARPO 与 turn-level 信用分配：根据 token 熵识别高不确定性的中间决策，在关键节点分配分支采样预算，比较后续轨迹，研究如何让训练信号更准确地作用于关键工具选择与推理步骤。</p>
+                  </div>
+                </details>
               </section>
             </div>
             <div class="inline-tags" aria-label="实习技术关键词">
-              <span>Critic · Rethink</span><span>Skill 自迭代</span><span>Agent Evaluation</span><span>Agentic RL</span><span>ARPO</span>
+              <span>SFT · GRPO / DAPO / GSPO</span><span>Skill 自迭代</span><span>Agent Evaluation</span><span>verl · vLLM · Ray</span>
             </div>
           </div>
         </article>
@@ -341,7 +396,7 @@ const publications = [
         </div>
         <div class="research-list">
           {research.map((item) => (
-            <article class="resume-entry research-entry">
+            <article class="resume-entry research-entry" id={item.id}>
               <div class="entry-details">
                 <BookOpen class="entry-icon" size={21} stroke-width={1.7} />
                 <h3>{item.title}</h3>
@@ -359,6 +414,9 @@ const publications = [
               </div>
               <div class="entry-content research-content">
                 <p class="entry-quote">{item.brief}</p>
+                <ul class="research-highlights" aria-label={`${item.title} 代表结果`}>
+                  {item.highlights.map((highlight) => <li>{highlight}</li>)}
+                </ul>
                 <div class="research-visual">
                   <Image
                     src={item.image}
@@ -371,7 +429,7 @@ const publications = [
                   />
                 </div>
                 <details class="entry-more">
-                  <summary><span>详情</span><span class="details-mark">+</span></summary>
+                  <summary><span>展开：方法、个人贡献与实验结果</span><span class="details-mark">+</span></summary>
                   <div class="entry-more-content">
                     <p class="research-role">{item.role}</p>
                     <dl class="research-detail-list">
@@ -428,7 +486,7 @@ const publications = [
           </div>
           <div class="entry-content">
             <p class="entry-quote">研究方向：多模态学习、强化学习与可信医疗 AI。</p>
-            <p>持续参与医学多模态、结构化推理与可验证学习研究，形成从数据、训练、评测到论文表达的完整科研经验。</p>
+            <p>围绕多模态表征、可解释推理和强化学习开展研究，具备问题定义、模型实现、对照与消融实验、结果分析和论文写作经验。</p>
           </div>
         </article>
         <article class="resume-entry education-entry">
@@ -439,7 +497,7 @@ const publications = [
             <p class="entry-caption">2020.09 - 2024.06</p>
           </div>
           <div class="entry-content">
-            <p class="entry-quote">扎实的计算机基础与连续科研训练。</p>
+            <p class="entry-quote">计算机专业基础与数学建模训练。</p>
             <p>专业排名 26/108，三次获得奖学金；获 MCM Honorable Mention。</p>
           </div>
         </article>
@@ -452,16 +510,22 @@ const publications = [
         <div class="skills-layout">
           <div class="skills-heading">
             <CodeXml size={22} stroke-width={1.7} />
-            <h3>技术栈概览</h3>
+            <h3>从模型到系统</h3>
           </div>
           <div>
-            <p>以 Python / PyTorch 为主要研发环境，能够完成数据构造、大模型后训练、多工具 Agent、自动评测与服务化验证。</p>
+            <p>以 Python / PyTorch 为主要研发环境，覆盖模型训练、策略学习、多模态建模与评测工程；能把算法实验组织成可复现、可诊断、可持续迭代的研发流程。</p>
+            <dl class="research-detail-list capability-list">
+              <div><dt>后训练 / RL</dt><dd>SFT 冷启动、GRPO / DAPO / GSPO、正负样本构建、奖励设计、错误轨迹回灌；基于 verl、vLLM 与 Ray 搭建多轮训练链路。</dd></div>
+              <div><dt>Agent 系统</dt><dd>ReAct 工具调用、多 Agent 协作、动态 Skill、轨迹回放、错误节点归因与自动回归；兼顾决策效果、工具稳定性和规则维护。</dd></div>
+              <div><dt>多模态算法</dt><dd>视觉语言预训练、3D 表征、跨模态对齐、证据 Grounding、知识蒸馏与最优传输；具有从模型设计到多数据集验证的科研经验。</dd></div>
+              <div><dt>研究与评测</dt><dd>数据划分、对照与消融、跨数据集验证、错误分析和效率评估；可迁移至 VLM、具身智能上层决策及机器学习研究中的建模与实验问题。</dd></div>
+            </dl>
             <div class="skill-keywords">
               <span>Python · PyTorch</span>
               <span>SFT · GRPO</span>
               <span>verl · vLLM</span>
-              <span>Agent Evaluation</span>
-              <span>Multimodal AI</span>
+              <span>Multi-Agent · Skill</span>
+              <span>3D VLM · Grounding</span>
             </div>
           </div>
         </div>
@@ -471,7 +535,7 @@ const publications = [
     <footer class="resume-footer">
       <div>
         <strong>姚宣骋</strong>
-        <span>AI 算法 · Agent 系统 · 模型评测</span>
+        <span>大模型后训练 · Agent · 多模态算法</span>
       </div>
       <span>2027 届秋招 · 上海 / 杭州</span>
     </footer>
